@@ -16,11 +16,11 @@
         <div class="container">
 		    <div class="pt-5 pb-3 text-center">
 		        <h1>Ballz - Linear Algebra Version</h1>
-		        <p class="lead">This game is a modification of the (formerly) popular <a href="https://play.google.com/store/apps/details?id=com.ketchapp.ballz&hl=en_US&gl=US">Ballz</a> mobile game incorporating more linear algebra components. There is linear algebra involved in the inner workings of the game for the pathing of the ball, but also in the gameplay where players need to solve problems for their benefit to better track the path of the balls and to unlock powerups.</p>
+		        <p class="lead">This game is an adaptation of the (formerly) popular <a href="https://play.google.com/store/apps/details?id=com.ketchapp.ballz&hl=en_US&gl=US">Ballz</a> mobile game incorporating more linear algebra components. There is linear algebra involved in the inner workings of the game for the pathing of the ball, but also in the gameplay where players need to solve problems for their benefit to better track the path of the balls and to unlock powerups.</p>
 		    </div>
 		</div>
 		<div class="container center text-center">
-		    <canvas id="gameCanvas" width="360" height="495"></canvas>
+		    <canvas id="gameCanvas" width="395" height="540"></canvas>
 		</div>
 		<div class="container">
 		    <p>Testing testing one two three.</p>
@@ -30,8 +30,15 @@
 		</div>
         <script>
             /* Initial setup */
+            // Game block settings
+            var blockSize = 45;
+            var blockMargin = 5;
+            var numBlocksWidth = 9, numBlocksHeight = 12;
+            
             // setup the canvas
             var canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
+            canvas.width = numBlocksWidth * blockSize + blockMargin * (numBlocksWidth-1);
+            canvas.height = numBlocksHeight * blockSize + blockMargin * (numBlocksHeight-1) + blockSize; // last one adjusts for bottom bar
             
             // render setup
             var targetFps = 60, targetElapsed = 1/60;
@@ -42,9 +49,12 @@
             var game_state = "aiming";
             var ballsMoving = 0, framesPassed = 0, framesBeforeShots = 5;
             
-            var grid = new Array(canvas.height/45 - 1);
+            var grid = new Array(numBlocksHeight);
             for (var i = 0; i < grid.length; i++) {
-                grid[i] = new Array(canvas.width/45);
+                grid[i] = new Array(numBlocksWidth);
+                for (var j = 0; j < grid[i].length; j++) {
+                    grid[i][j] = null;
+                }
             }
             var levelNum = 1;
         </script>
@@ -54,8 +64,8 @@
         <script src="board.js"></script>
         <script>
             // start game
-            var balls = [new Ball(), new Ball(), new Ball(), new Ball(), new Ball()];
-            gen_board();
+            var balls = [new Ball()];
+            grid = gen_board();
             requestAnimationFrame(draw);
         </script>
     </body>

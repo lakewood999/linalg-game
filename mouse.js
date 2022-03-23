@@ -19,6 +19,7 @@ window.addEventListener("mousemove", function(e) {
     mouseDx = -1*(firstMousePos.x - pos.x), mouseDy = -1*(firstMousePos.y - pos.y);
     mouseDistance = mouseDx * mouseDx + mouseDy * mouseDy;
     if (mouseDistance >= minMouseMovingRadius && mouseDy >= 0) isMouseMoving = true;
+    if (mouseDy < 0) isMouseMoving = false;
     if (isMouseMoving) {
         mouseAngle = Math.atan(Math.abs(mouseDy)/Math.abs(mouseDx));
         e.preventDefault();

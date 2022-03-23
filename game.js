@@ -17,10 +17,24 @@ function draw(timestamp) {
     ctx.stroke();
     ctx.closePath();
     
-    ctx.font = "12pt Calibri";
+    ctx.font = "12pt Sans-Serif";
     ctx.textAlign = "left";
     ctx.fillStyle = "black";
     ctx.fillText("FPS: " + Math.round(1/timeDelta), 10, canvas.height - 10);
+    
+    ctx.textAlign = "right";
+    ctx.fillText("Score: " + levelNum, canvas.width-10, canvas.height - 10);
+    
+    for (var j = 0; j < grid.length; j++) {
+        for (var k = 0; k < grid[j].length; k++) {
+            if (grid[j][k] !== null) {
+                var currentBlock = grid[j][k];
+                currentBlock.x = k * blockSize + blockMargin * k;
+                currentBlock.y = j * blockSize + blockMargin * j;
+                currentBlock.draw(ctx,canvas);
+            }
+        }
+    }
     
     if (game_state === "aiming") {
         ctx.beginPath();
@@ -30,19 +44,17 @@ function draw(timestamp) {
         ctx.closePath();
     }
     
-    
-    
     if (Math.abs(timeDelta-targetElapsed) < 0.01) {
         if (isMouseMoving && mouseDy > 0 && game_state === "aiming") {
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.lineWidth = Math.min(4,Math.sqrt(mouseDistance)/40);
             var xLength = canvas.width/4;
-            var lineY = startY-Math.tan(mouseAngle)*xLength;
+            var lineY = startY - Math.sin(mouseAngle)*xLength;
             if (mouseDx < 0) {
-                var lineX = canvas.width - xLength;
+                var lineX = startX + xLength*Math.cos(mouseAngle);
             } else {
-                var lineX = 0 + xLength;
+                var lineX = startX - xLength * Math.cos(mouseAngle);
             }
             ctx.lineTo(lineX, lineY);
             ctx.stroke();
@@ -81,6 +93,8 @@ function draw(timestamp) {
             mouseDistance = 0;
             mouseAngle = 0;
             game_state = "aiming";
+            levelNum++;
+            gen_board();
         }
     }
     
