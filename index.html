@@ -38,23 +38,17 @@
             var targetElapsed = 1/60;
             
             // basic game variables
-            var startX = canvas.width/2;
-            var startY = canvas.height-90;
-            var ballXVelocity = 400; var ballYVelocity = -400;
+            var startX = canvas.width/2, startY = canvas.height-90;
             var ballRadius = 7.5;
             var game_state = "aiming";
             var ballsMoving = 0;
             
             function Ball() {
                 this.radius = 7.5;
-                this.x = startX;
-                this.y = startY;
+                this.x = startX; this.y = startY;
                 this.moving = false;
-                this.done = true;
-                this.started = false;
-                this.draw = draw;
-                this.xVelocity = 0;
-                this.yVelocity = 0;
+                this.done = true; this.started = false; this.draw = draw;
+                this.xVelocity = 0; this.yVelocity = 0;
                 
                 function draw(ctx,canvas,timeDelta) {
                     if (!this.moving) this.moving = true;
@@ -72,7 +66,6 @@
                     // update positions
                     var dx = this.xVelocity * timeDelta; var dy = this.yVelocity * timeDelta;
                     if (this.y + dy > canvas.height-this.radius) {
-                        this.visible = false;
                         this.done = true;
                         ballsMoving--;
                     }
@@ -82,6 +75,7 @@
                     if (this.x + dx > canvas.width-this.radius || this.x + dx < this.radius) {
                         this.xVelocity = -this.xVelocity;
                     }
+                    console.log(dx);
                     this.x += dx; this.y += dy;
                 }
             };
@@ -90,11 +84,10 @@
             var x = startX; var y = startY;
             
             // detect mouse movements
-            var isMouseDown = false;
-            var isMouseMoving = false;
+            var isMouseDown = false, isMouseMoving = false;
             var minMouseMovingRadius = 2*2;
             var firstMousePos, mouseDx, mouseDy;
-            var mouseAngle; var mouseDistance;
+            var mouseAngle, mouseDistance;
             function getXY(e) {
                 return {x: e.clientX, y: e.clientY}
             }
@@ -102,15 +95,12 @@
                 if (game_state !== "aiming") return;
                 console.log("registered click");
                 firstMousePos = getXY(e);
-                isMouseDown = true;
-                isMouseMoving = false;
+                isMouseDown = true, isMouseMoving = false;
             }
             window.addEventListener("mousemove", function(e) {
-                if (game_state !== "aiming") return;
-                if (!isMouseDown) return;
+                if (game_state !== "aiming" || !isMouseDown) return;
                 var pos = getXY(e);
-                mouseDx = -1*(firstMousePos.x - pos.x);
-                mouseDy = -1*(firstMousePos.y - pos.y);
+                mouseDx = -1*(firstMousePos.x - pos.x), mouseDy = -1*(firstMousePos.y - pos.y);
                 mouseDistance = mouseDx * mouseDx + mouseDy * mouseDy;
                 console.log(mouseDistance);
                 if (mouseDistance >= minMouseMovingRadius && mouseDy >= 0) isMouseMoving = true;
@@ -119,12 +109,9 @@
                 }
             });
             window.addEventListener("mouseup", function(e) {
-                if (game_state !== "aiming") return;
-                if (!isMouseDown) return;
+                if (game_state !== "aiming" || !isMouseDown) return;
                 if (isMouseMoving) game_state = "shooting";
-                isMouseDown = false;
-                isMouseMoving = false;
-                
+                isMouseDown = false, isMouseMoving = false;
                 if (!isMouseMoving) {
                 }
             });
@@ -166,11 +153,11 @@
                                 currentBall.started = true;
                                 currentBall.done = false;
                                 console.log(mouseDx + " " + mouseDy);
-                                currentBall.xVelocity = -1*mouseDx/1000;
-                                currentBall.yVelocity = -1*mouseDy/1000;
+                                currentBall.xVelocity = -1*100*mouseDx/10;
+                                currentBall.yVelocity = -1*100*mouseDy/10;
                                 ballsMoving++;
                             }
-                            currentBall.draw(ctx,canvas,ballXVelocity,ballYVelocity,timeDelta);
+                            currentBall.draw(ctx,canvas,timeDelta);
                         }
                         if (ballsMoving == 0) {
                             game_state = "resetting";
