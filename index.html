@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="device-width, initial-scale=1">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <title>Linear Algebra Game</title>
+        <style>
+            canvas {
+                border: 1px black solid;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+		    <div class="pt-5 pb-3 text-center">
+		        <h1>Ballz - Linear Algebra Version</h1>
+		        <p class="lead">This game is a modification of the (formerly) popular <a href="https://play.google.com/store/apps/details?id=com.ketchapp.ballz&hl=en_US&gl=US">Ballz</a> mobile game incorporating more linear algebra components. There is linear algebra involved in the inner workings of the game for the pathing of the ball, but also in the gameplay where players need to solve problems for their benefit to better track the path of the balls and to unlock powerups.</p>
+		    </div>
+		</div>
+		<div class="container center">
+		    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+		</div>
+		<div class="container">
+		    <p>Testing testing one two three.</p>
+		    <ul>
+		        <li>Aim the initial trajectory of the ball</li>
+		    </ul>
+		</div>
+        <script>
+            // setup the canvas
+            var canvas = document.getElementById("gameCanvas");
+            var ctx = canvas.getContext("2d");
+            
+            // render setup
+            var targetFps = 60;
+            var targetElapsed = 1/60;
+            
+            // basic game variables
+            var startX = canvas.width/2;
+            var startY = canvas.height-90;
+            var ballXVelocity = 400; var ballYVelocity = -400;
+            var ballRadius = 7.5;
+            var game_state = "aiming";
+            var ballsMoving = 0;
+            
+            function Ball() {
+                this.radius = 7.5;
+                this.x = startX;
+                this.y = startY;
+                this.moving = false;
+                this.done = true;
+                this.started = false;
+                this.draw = draw;
+                this.xVelocity = 0;
+                this.yVelocity = 0;
+                
+                function draw(ctx,canvas,timeDelta) {
+                    if (!this.moving) this.moving = true;
+                    if (this.done) return;
+                    // draw circles in path
+                    if (!this.done) {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+                        ctx.fillStyle = "#0095DD";
+                        ctx.fill();
+                        ctx.closePath();
+                        console.log("ok...");
+                    }
+                    
+                    // update positions
+                    var dx = this.xVelocity * timeDelta; var dy = this.yVelocity * timeDelta;
+                    if (this.y + dy > canvas.height-this.radius) {
+                        this.visible = false;
+                        this.done = true;
+                        ballsMoving--;
+                    }
+                    if (this.y + dy < this.radius) {
+                        this.yVelocity = -this.yVelocity;
+                    }
+                    if (this.x + dx > canvas.width-this.radius || this.x + dx < this.radius) {
+                        this.xVelocity = -this.xVelocity;
+                    }
+                    this.x += dx; this.y += dy;
+                }
+            };
+            var balls = [new Ball()];
+            
+            var x = startX; var y = startY;
+            
+            // detect mouse movements
+            var isMouseDown = false;
+            var isMouseMoving = false;
+            var minMouseMovingRadius = 2*2;
+            var firstMousePos, mouseDx, mouseDy;
+            var mouseAngle; var mouseDistance;
+            function getXY(e) {
+                return {x: e.clientX, y: e.clientY}
+            }
+            canvas.onmousedown = function(e) {
+                if (game_state !== "aiming") return;
+                console.log("registered click");
+                firstMousePos = getXY(e);
+                isMouseDown = true;
+                isMouseMoving = false;
+            }
+            window.addEventListener("mousemove", function(e) {
+                if (game_state !== "aiming") return;
+                if (!isMouseDown) return;
+                var pos = getXY(e);
+                mouseDx = -1*(firstMousePos.x - pos.x);
+                mouseDy = -1*(firstMousePos.y - pos.y);
+                mouseDistance = mouseDx * mouseDx + mouseDy * mouseDy;
+                console.log(mouseDistance);
+                if (mouseDistance >= minMouseMovingRadius && mouseDy >= 0) isMouseMoving = true;
+                if (isMouseMoving) {
+                    mouseAngle = Math.atan(Math.abs(mouseDy)/Math.abs(mouseDx));
+                }
+            });
+            window.addEventListener("mouseup", function(e) {
+                if (game_state !== "aiming") return;
+                if (!isMouseDown) return;
+                if (isMouseMoving) game_state = "shooting";
+                isMouseDown = false;
+                isMouseMoving = false;
+                
+                if (!isMouseMoving) {
+                }
+            });
+            
+            // Run on time to prevent different speeds on different devices
+            let previousTimestamp = Date.now();
+            function draw(timestamp) {
+                // clear board
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.beginPath();
+                ctx.arc(startX, startY, ballRadius, 0, Math.PI*2);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+                
+                // get the times
+                const timeDelta = (timestamp-previousTimestamp)/1000; // convert to seconds
+                
+                if (Math.abs(timeDelta-targetElapsed) < 0.01) {
+                    if (isMouseMoving && mouseDy > 0 && game_state === "aiming") {
+                        ctx.beginPath();
+                        ctx.moveTo(startX, startY);
+                        ctx.lineWidth = Math.min(8,Math.sqrt(mouseDistance)/50);
+                        var xLength = canvas.width/4;
+                        var lineY = startY-Math.tan(mouseAngle)*xLength;
+                        if (mouseDx < 0) {
+                            var lineX = canvas.width - xLength;
+                        } else {
+                            var lineX = 0 + xLength;
+                        }
+                        ctx.lineTo(lineX, lineY);
+                        ctx.stroke();
+                    } else if (game_state === "shooting") {
+                        for (var i = 0; i < balls.length; i++) {
+                            var currentBall = balls[i];
+                            if (currentBall.started == false) {
+                                console.log("shooting ball");
+                                currentBall.started = true;
+                                currentBall.done = false;
+                                console.log(mouseDx + " " + mouseDy);
+                                currentBall.xVelocity = -1*mouseDx/1000;
+                                currentBall.yVelocity = -1*mouseDy/1000;
+                                ballsMoving++;
+                            }
+                            currentBall.draw(ctx,canvas,ballXVelocity,ballYVelocity,timeDelta);
+                        }
+                        if (ballsMoving == 0) {
+                            game_state = "resetting";
+                        }
+                    } else if (game_state === "resetting") {
+                        for (var i = 0; i < balls.length; i++) {
+                            var currentBall = balls[i];
+                            currentBall.started = false;
+                            currentBall.done = true;
+                            currentBall.xVelocity = 0;
+                            currentBall.yVelocity = 0;
+                            currentBall.x = startX;
+                            currentBall.y = startY;
+                        }
+                        firstMousePos = null;
+                        mouseDistance = 0;
+                        mouseAngle = 0;
+                        console.log("reset!");
+                        game_state = "aiming";
+                    }
+                }
+                
+                // update time
+                previousTimestamp = timestamp;
+                
+                // draw next frame
+                requestAnimationFrame(draw);
+            }
+            //setInterval(draw, 1000/targetFps);
+            requestAnimationFrame(draw);
+        </script>
+    </body>
+</html>
