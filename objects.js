@@ -17,12 +17,11 @@ function Ball() {
             ctx.fillStyle = "#0095DD";
             ctx.fill();
             ctx.closePath();
-            console.log("ok...");
         }
         
         // update positions
         var dx = this.xVelocity * timeDelta; var dy = this.yVelocity * timeDelta;
-        if (this.y + dy > canvas.height-this.radius) {
+        if (this.y + dy > startY) {
             this.done = true;
             ballsMoving--;
         }
@@ -32,7 +31,25 @@ function Ball() {
         if (this.x + dx > canvas.width-this.radius || this.x + dx < this.radius) {
             this.xVelocity = -this.xVelocity;
         }
-        console.log(dx);
         this.x += dx; this.y += dy;
     }
 };
+
+function Block() {
+    this.number = 1;
+    this.x = 0, this.y = 0;
+    this.len = 10;
+    this.draw = draw();
+    
+    function draw(ctx,canvas) {
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.fillRect(this.x, this.y, this.x + this.len, this.y + this.len);
+        ctx.stroke();
+        ctx.closePath();
+        ctx.font = "10pt Calibri";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "white";
+        ctx.fillText(this.number, this.x + this.len/2, this.y + this.len/2);
+    }
+}

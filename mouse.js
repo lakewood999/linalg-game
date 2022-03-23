@@ -10,7 +10,6 @@ function getXY(e) {
 }
 canvas.onmousedown = function(e) {
     if (game_state !== "aiming") return;
-    console.log("registered click");
     firstMousePos = getXY(e);
     isMouseDown = true, isMouseMoving = false;
 }
@@ -19,10 +18,10 @@ window.addEventListener("mousemove", function(e) {
     var pos = getXY(e);
     mouseDx = -1*(firstMousePos.x - pos.x), mouseDy = -1*(firstMousePos.y - pos.y);
     mouseDistance = mouseDx * mouseDx + mouseDy * mouseDy;
-    console.log(mouseDistance);
     if (mouseDistance >= minMouseMovingRadius && mouseDy >= 0) isMouseMoving = true;
     if (isMouseMoving) {
         mouseAngle = Math.atan(Math.abs(mouseDy)/Math.abs(mouseDx));
+        e.preventDefault();
     }
 });
 window.addEventListener("mouseup", function(e) {

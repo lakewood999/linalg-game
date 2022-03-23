@@ -3,23 +3,40 @@
 
 let previousTimestamp = Date.now();
 function draw(timestamp) {
+    // get the times
+    const timeDelta = (timestamp-previousTimestamp)/1000; // convert to seconds
+    
     // clear board
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // game bottom border line; always draw
     ctx.beginPath();
-    ctx.arc(startX, startY, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
+    ctx.moveTo(0, startY);
+    ctx.lineWidth = 1;
+    ctx.lineTo(canvas.width, startY);
+    ctx.stroke();
     ctx.closePath();
     
-    // get the times
-    const timeDelta = (timestamp-previousTimestamp)/1000; // convert to seconds
+    ctx.font = "12pt Calibri";
+    ctx.textAlign = "left";
+    ctx.fillStyle = "black";
+    ctx.fillText("FPS: " + Math.round(1/timeDelta), 10, canvas.height - 10);
+    
+    if (game_state === "aiming") {
+        ctx.beginPath();
+        ctx.arc(startX, startY, ballRadius, 0, Math.PI*2);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+    
+    
     
     if (Math.abs(timeDelta-targetElapsed) < 0.01) {
         if (isMouseMoving && mouseDy > 0 && game_state === "aiming") {
             ctx.beginPath();
             ctx.moveTo(startX, startY);
-            ctx.lineWidth = Math.min(8,Math.sqrt(mouseDistance)/50);
+            ctx.lineWidth = Math.min(4,Math.sqrt(mouseDistance)/40);
             var xLength = canvas.width/4;
             var lineY = startY-Math.tan(mouseAngle)*xLength;
             if (mouseDx < 0) {
@@ -29,20 +46,23 @@ function draw(timestamp) {
             }
             ctx.lineTo(lineX, lineY);
             ctx.stroke();
+            ctx.closePath();
         } else if (game_state === "shooting") {
             for (var i = 0; i < balls.length; i++) {
                 var currentBall = balls[i];
-                if (currentBall.started == false) {
-                    console.log("shooting ball");
+                if (currentBall.started == false && (i === 0 || framesPassed === framesBeforeShots)) {
                     currentBall.started = true;
                     currentBall.done = false;
-                    console.log(mouseDx + " " + mouseDy);
-                    currentBall.xVelocity = -1*100*mouseDx/10;
-                    currentBall.yVelocity = -1*100*mouseDy/10;
+                    var xMultiplier = mouseDx < 0 ? 1 : -1;
+                    var speed = Math.min(5*Math.sqrt(mouseDistance)+300,700);
+                    currentBall.xVelocity = xMultiplier*speed*Math.cos(mouseAngle);
+                    currentBall.yVelocity = -1*speed*Math.sin(mouseAngle);
                     ballsMoving++;
+                    framesPassed = 0;
                 }
                 currentBall.draw(ctx,canvas,timeDelta);
             }
+            framesPassed++;
             if (ballsMoving == 0) {
                 game_state = "resetting";
             }
@@ -56,10 +76,10 @@ function draw(timestamp) {
                 currentBall.x = startX;
                 currentBall.y = startY;
             }
+            framesPassed = 0;
             firstMousePos = null;
             mouseDistance = 0;
             mouseAngle = 0;
-            console.log("reset!");
             game_state = "aiming";
         }
     }

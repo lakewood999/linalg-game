@@ -19,8 +19,8 @@
 		        <p class="lead">This game is a modification of the (formerly) popular <a href="https://play.google.com/store/apps/details?id=com.ketchapp.ballz&hl=en_US&gl=US">Ballz</a> mobile game incorporating more linear algebra components. There is linear algebra involved in the inner workings of the game for the pathing of the ball, but also in the gameplay where players need to solve problems for their benefit to better track the path of the balls and to unlock powerups.</p>
 		    </div>
 		</div>
-		<div class="container center">
-		    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+		<div class="container center text-center">
+		    <canvas id="gameCanvas" width="360" height="495"></canvas>
 		</div>
 		<div class="container">
 		    <p>Testing testing one two three.</p>
@@ -31,27 +31,30 @@
         <script>
             /* Initial setup */
             // setup the canvas
-            var canvas = document.getElementById("gameCanvas");
-            var ctx = canvas.getContext("2d");
+            var canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
             
             // render setup
-            var targetFps = 60;
-            var targetElapsed = 1/60;
+            var targetFps = 60, targetElapsed = 1/60;
             
             // basic game variables
-            var startX = canvas.width/2, startY = canvas.height-90;
+            var startX = canvas.width/2, startY = canvas.height-45;
             var ballRadius = 7.5;
             var game_state = "aiming";
-            var ballsMoving = 0;
+            var ballsMoving = 0, framesPassed = 0, framesBeforeShots = 5;
             
-            var x = startX; var y = startY;
+            var grid = new Array(canvas.height/45 - 1);
+            for (var i = 0; i < grid.length; i++) {
+                grid[i] = new Array(canvas.width/45);
+            }
+            var levelNum = 1;
         </script>
         <script src="mouse.js"></script>
         <script src="objects.js"></script>
         <script src="game.js"></script>
         <script>
             // start game
-            var balls = [new Ball()];
+            var balls = [new Ball(), new Ball(), new Ball(), new Ball(), new Ball()];
+            gen_board();
             requestAnimationFrame(draw);
         </script>
     </body>
