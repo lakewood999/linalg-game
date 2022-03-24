@@ -2,8 +2,10 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <meta name="viewport" content="device-width, initial-scale=1">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="static/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
         <title>Linear Algebra Game</title>
         <style>
             canvas {
@@ -24,7 +26,7 @@
 		    <div id="overlay" style="display: none;"><p>Game lost!</p></div>
 		</div>
 		<div class="container">
-		    <p>Testing testing one two three.</p>
+		    <p>Testing testing one two three.\( ax^2 + bx - c = 0 \) \(\begin{bmatrix}a & b\\c & d\end{bmatrix} \)</p>
 		    <ul>
 		        <li>Aim the initial trajectory of the ball</li>
 		    </ul>
@@ -62,10 +64,10 @@
             var ballsGained = 0;
             var roundsSincePowerup = 0;
         </script>
-        <script src="mouse.js"></script>
-        <script src="objects.js"></script>
-        <script src="game.js"></script>
-        <script src="board.js"></script>
+        <script src="static/mouse.js"></script>
+        <script src="static/objects.js"></script>
+        <script src="static/game.js"></script>
+        <script src="static/board.js"></script>
         <script>
             // start game
             var balls = [new Ball()];

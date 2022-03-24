@@ -58,7 +58,7 @@ function draw(timestamp) {
         ctx.fill();
         ctx.closePath();
         ctx.textAlign = "center";
-        ctx.fillText(""+balls.length+" balls", startX, startY + 30);
+        ctx.fillText(""+balls.length+" ball(s)", startX, startY + 30);
     }
     
     if (Math.abs(timeDelta-targetElapsed) < 0.01) {
