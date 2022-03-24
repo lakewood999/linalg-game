@@ -29,8 +29,8 @@ function draw(timestamp) {
         for (var k = 0; k < grid[j].length; k++) {
             if (grid[j][k] !== null) {
                 var currentBlock = grid[j][k];
-                currentBlock.x = k * blockSize + blockMargin * k;
-                currentBlock.y = j * blockSize + blockMargin * j;
+                currentBlock.x = k * blockSize + blockMargin * (k+1);
+                currentBlock.y = j * blockSize + blockMargin * (j+1);
                 currentBlock.draw(ctx,canvas);
             }
         }
@@ -49,7 +49,7 @@ function draw(timestamp) {
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.lineWidth = Math.min(4,Math.sqrt(mouseDistance)/40);
-            var xLength = canvas.width/4;
+            var xLength = canvas.width/2;
             var lineY = startY - Math.sin(mouseAngle)*xLength;
             if (mouseDx < 0) {
                 var lineX = startX + xLength*Math.cos(mouseAngle);
@@ -66,7 +66,7 @@ function draw(timestamp) {
                     currentBall.started = true;
                     currentBall.done = false;
                     var xMultiplier = mouseDx < 0 ? 1 : -1;
-                    var speed = Math.min(5*Math.sqrt(mouseDistance)+300,700);
+                    var speed = Math.min(5*Math.sqrt(mouseDistance)+300,400);
                     currentBall.xVelocity = xMultiplier*speed*Math.cos(mouseAngle);
                     currentBall.yVelocity = -1*speed*Math.sin(mouseAngle);
                     ballsMoving++;

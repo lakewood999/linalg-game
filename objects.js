@@ -1,7 +1,7 @@
 /* Objects used to draw the game board
 */
 function Ball() {
-    this.radius = 7.5;
+    this.radius = 9.5;
     this.x = startX; this.y = startY;
     this.moving = false;
     this.done = true; this.started = false; this.draw = draw;
@@ -36,38 +36,87 @@ function Ball() {
         }
         // block collision detection
         // only check neighboring cells for efficiency; need to adjust until a proper fix can be made
-        var currentX = Math.floor((this.x+dx)/blockSize);
-        var currentY = Math.floor((this.y+dy)/blockSize);
-        for (var i = Math.max(0,currentY-2); i <= Math.min(currentY+2, numBlocksHeight-1); i++) {
-            for (var j = Math.max(0,currentX-2); j <= Math.min(currentX+2,numBlocksWidth-1); j++) {
-                var blockTest = grid[i][j];
-                if (blockTest !== null) {
-                    var testX = this.x, testY = this.y, isLeft = true, isAbove = true;
-                    // determine edges to use in collision detection
-                    if (this.x+dx < blockTest.x) testX = blockTest.x; // left edge
-                    else if (this.x+dx > blockTest.x+blockTest.len) testX = blockTest.x+blockTest.len; isLeft = false; // right edge
-                    if (this.y < blockTest.y) testY = blockTest.y // top edge
-                    else if (this.y+dy > blockTest.y+blockTest.len) testY = blockTest.y+blockTest.len; isAbove = false; // bottom edge
-                    // calculate distance
-                    var distX = (this.x+dx)-testX, distY =(this.y+dy)-testY;
-                    var objectDistance = Math.sqrt( (distX*distX) + (distY*distY) );
-                    if (objectDistance <= this.radius) {
-                        if (blockTest.number - 1 === 0) {
-                            grid[i][j] = null;
-                        } else {
-                            blockTest.number -= 1;
-                        }
-                        if ((isLeft && blockTest.x - (this.x+dx) <= this.radius) || (!isLeft && (this.x+dx) - blockTest.x - blockTest.len <= this.radius)) { // collision on side means change x
-                            this.xVelocity = -this.xVelocity;
-                        }
-                        console.log(isAbove);
-                        console.log((this.y+dy) + " is sphere and rect: " + blockTest.y);
-                        if ((isAbove && blockTest.y - (this.y+dy) <= this.radius) || (!isAbove && (this.y+dy)-blockTest.y-blockTest.len <= this.radius)) { // collision on bottom means change y only
-                            console.log("Direction change");
+        var currentX = Math.floor((this.x+dx+blockMargin/2)/(blockSize+blockMargin/2));
+        var currentY = Math.floor((this.y+dy+blockMargin/2)/(blockSize+blockMargin/2));
+        var blockCheckRange = [[-1,0],[1,0],[0,-1],[0,1],[1,1],[-1,1],[1,-1],[-1,-1]];
+        for (var i = 0; i < blockCheckRange.length; i++) {
+            var newY = currentY+blockCheckRange[i][1], newX = currentX+blockCheckRange[i][0];
+            if (newY < 0 || newY > numBlocksHeight-1 || newX < 0 || newX > numBlocksWidth - 1) continue;
+            var blockTest = grid[newY][newX];
+            if (blockTest !== null) {
+                //blockTest.number = 100;
+                var testX = this.x, testY = this.y, isLeft = true, isAbove = true;
+                
+                // determine edges to use in collision detection
+                if (this.x+dx < blockTest.x) testX = blockTest.x; // left edge
+                else if (this.x+dx > blockTest.x+blockTest.len) testX = blockTest.x+blockTest.len; isLeft = false; // right edge
+                if (this.y < blockTest.y) testY = blockTest.y // top edge
+                else if (this.y+dy > blockTest.y+blockTest.len) testY = blockTest.y+blockTest.len; isAbove = false; // bottom edge
+                
+                // calculate distance
+                var rectCenter = {x: blockTest.x + blockTest.len/2, y: blockTest.y + blockTest.len/2};
+                var sides = {x: (this.x+dx) - rectCenter.x, y: (this.y+dy) - rectCenter.y};
+                var collided = false;
+                if (Math.abs(1-Math.abs(sides.y/sides.x)) < 0.1 && Math.pow(sides.x,2) + Math.pow(sides.y,2) <= Math.pow(this.radius + Math.sqrt(2)*blockTest.len/2,2)) { // corner hit
+                    this.xVelocity = -this.xVelocity;
+                    this.yVelocity = -this.yVelocity;
+                    collided = true;
+                } else {
+                    if (Math.abs(sides.y) > Math.abs(sides.x)) {
+                        if (Math.abs(sides.y+dy) <= this.radius + blockTest.len/2 + 12) { // vertical collision
+                            console.log("top");
                             this.yVelocity = -this.yVelocity;
+                            collided = true;
+                        } else {
+                            console.log("failed top with ");
+                            console.log(sides);
+                        }
+                    } else if (Math.abs(sides.x) > Math.abs(sides.y)) {
+                        if (Math.abs(sides.x+dx) <= this.radius + blockTest.len/2 + 12) { // horizontal collision
+                            console.log("side");
+                            this.xVelocity = -this.xVelocity;
+                            collided = true;
+                        } else {
+                            console.log("failed side with ");
+                            console.log(sides);
+                        }
+                    } else {
+                        if (sides.y > 0) {
+                        console.log("missed");
+                        console.log(sides);
+                        console.log(currentX + " " + currentY);
+                        console.log(newY + " " + newX);
                         }
                     }
                 }
+                if (collided) {
+                    if (blockTest.number - 1 === 0) {
+                        grid[newY][newX] = null;
+                    } else {
+                        blockTest.number -= 1;
+                    }
+                    break;
+                }
+                /*var distX = (this.x+1.5*dx)-testX, distY =(this.y+1.5*dy)-testY;
+                var objectDistance = Math.sqrt( (distX*distX) + (distY*distY) );
+                if (objectDistance <= this.radius) {
+                    if ((isLeft && blockTest.x - (this.x+dx) <= this.radius) || (!isLeft && (this.x+dx) - blockTest.x - blockTest.len <= this.radius)) { // collision on side means change x
+                        console.log("hit vertical");
+                        console.log(this.yVelocity + " and " + this.xVelocity);
+                        this.yVelocity = -this.yVelocity;
+                        console.log(this.yVelocity + " and " + this.xVelocity);
+                    } else if ((isAbove && blockTest.y - (this.y+dy) <= this.radius) || (!isAbove && (this.y+dy)-blockTest.y-blockTest.len <= this.radius)) { // collision on bottom means change y only
+                        console.log("hit side");
+                        this.xVelocity = -this.xVelocity;
+                    } else {
+                        console.log("ok...");
+                    }
+                    if (blockTest.number - 1 === 0) {
+                        grid[newY][newX] = null;
+                    } else {
+                        blockTest.number -= 1;
+                    }
+                }*/
             }
         }
         this.x += dx; this.y += dy;
