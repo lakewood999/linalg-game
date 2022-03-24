@@ -36,14 +36,24 @@ function Ball() {
         }
         // block collision detection
         // only check neighboring cells for efficiency; need to adjust until a proper fix can be made
-        var currentX = Math.floor((this.x+dx+blockMargin/2)/(blockSize+blockMargin/2));
-        var currentY = Math.floor((this.y+dy+blockMargin/2)/(blockSize+blockMargin/2));
+        var currentX = Math.min(numBlocksWidth-1,Math.max(0,Math.floor((this.x+dx-blockMargin/2)/(blockSize+blockMargin/2))));
+        var currentY = Math.min(numBlocksHeight-1,Math.max(0,Math.floor((this.y+dy-blockMargin/2)/(blockSize+blockMargin/2))));
+        console.log(currentX + " " + currentY);
+        if (grid[currentY][currentX] !== null) {
+            if (grid[currentY][currentX].objectType === "powerup") {
+                ballsGained++;
+                grid[currentY][currentX] = null;
+            }
+        } else {
+            //grid[currentY][currentX] = new Powerup();
+            //grid[currentY][currentX].objectType = "tracer";
+        }
         var blockCheckRange = [[-1,0],[1,0],[0,-1],[0,1],[1,1],[-1,1],[1,-1],[-1,-1]];
         for (var i = 0; i < blockCheckRange.length; i++) {
             var newY = currentY+blockCheckRange[i][1], newX = currentX+blockCheckRange[i][0];
             if (newY < 0 || newY > numBlocksHeight-1 || newX < 0 || newX > numBlocksWidth - 1) continue;
             var blockTest = grid[newY][newX];
-            if (blockTest !== null) {
+            if (blockTest !== null && blockTest.objectType === "block") {
                 //blockTest.number = 100;
                 var testX = this.x, testY = this.y, isLeft = true, isAbove = true;
                 
@@ -97,26 +107,6 @@ function Ball() {
                     }
                     break;
                 }
-                /*var distX = (this.x+1.5*dx)-testX, distY =(this.y+1.5*dy)-testY;
-                var objectDistance = Math.sqrt( (distX*distX) + (distY*distY) );
-                if (objectDistance <= this.radius) {
-                    if ((isLeft && blockTest.x - (this.x+dx) <= this.radius) || (!isLeft && (this.x+dx) - blockTest.x - blockTest.len <= this.radius)) { // collision on side means change x
-                        console.log("hit vertical");
-                        console.log(this.yVelocity + " and " + this.xVelocity);
-                        this.yVelocity = -this.yVelocity;
-                        console.log(this.yVelocity + " and " + this.xVelocity);
-                    } else if ((isAbove && blockTest.y - (this.y+dy) <= this.radius) || (!isAbove && (this.y+dy)-blockTest.y-blockTest.len <= this.radius)) { // collision on bottom means change y only
-                        console.log("hit side");
-                        this.xVelocity = -this.xVelocity;
-                    } else {
-                        console.log("ok...");
-                    }
-                    if (blockTest.number - 1 === 0) {
-                        grid[newY][newX] = null;
-                    } else {
-                        blockTest.number -= 1;
-                    }
-                }*/
             }
         }
         this.x += dx; this.y += dy;
@@ -128,6 +118,7 @@ function Block() {
     this.x = 0, this.y = 0;
     this.len = blockSize;
     this.draw = draw;
+    this.objectType = "block";
     
     function draw(ctx,canvas) {
         ctx.fillStyle = "hsl(" + (this.number*20) % 360  + ", 80%, 50%)";
@@ -136,5 +127,28 @@ function Block() {
         ctx.textAlign = "center";
         ctx.fillStyle = "white";
         ctx.fillText(this.number, this.x + this.len/2, this.y + this.len/2);
+    }
+}
+
+function Powerup() {
+    this.x = 0, this.y = 0;
+    this.draw = draw;
+    this.objectType = "powerup";
+    this.id = 0;
+    this.color = 86;
+    
+    function draw(ctx,canvas) {
+        ctx.beginPath();
+        ctx.fillStyle = "hsl(" + this.color + ", 80%, 50%)";
+        ctx.arc(this.x, this.y, 15, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fillStyle = "white";
+        ctx.fill()
+        ctx.closePath();
     }
 }

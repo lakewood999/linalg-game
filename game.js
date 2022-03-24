@@ -31,9 +31,24 @@ function draw(timestamp) {
                 var currentBlock = grid[j][k];
                 currentBlock.x = k * blockSize + blockMargin * (k+1);
                 currentBlock.y = j * blockSize + blockMargin * (j+1);
+                if (currentBlock.objectType === "powerup" || currentBlock.objectType === "tracer") {
+                    currentBlock.x += blockSize/2;
+                    currentBlock.y += blockSize/2;
+                }
                 currentBlock.draw(ctx,canvas);
             }
         }
+    }
+    
+    if (game_state === "lost") {
+        var overlay = document.getElementById("overlay");
+        canvas.style.display = "none";
+        overlay.style.width = "" + canvas.width + "px";
+        overlay.style.height = "" + canvas.height + "px";
+        overlay.style.display = "block";
+        overlay.style.margin = "auto";
+        overlay.style.border = "1px solid black";
+        return; // done with the game!
     }
     
     if (game_state === "aiming") {
@@ -42,6 +57,8 @@ function draw(timestamp) {
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
+        ctx.textAlign = "center";
+        ctx.fillText(""+balls.length+" balls", startX, startY + 30);
     }
     
     if (Math.abs(timeDelta-targetElapsed) < 0.01) {
@@ -66,7 +83,7 @@ function draw(timestamp) {
                     currentBall.started = true;
                     currentBall.done = false;
                     var xMultiplier = mouseDx < 0 ? 1 : -1;
-                    var speed = Math.min(5*Math.sqrt(mouseDistance)+300,400);
+                    var speed = Math.min(5*Math.sqrt(mouseDistance)+250,600);
                     currentBall.xVelocity = xMultiplier*speed*Math.cos(mouseAngle);
                     currentBall.yVelocity = -1*speed*Math.sin(mouseAngle);
                     ballsMoving++;
@@ -88,19 +105,35 @@ function draw(timestamp) {
                 currentBall.x = startX;
                 currentBall.y = startY;
             }
+            for (var j = 0; j < grid.length; j++) {
+                for (var k = 0; k < grid[j].length; k++) {
+                    if (grid[j][k] !== null) {
+                        var currentBlock = grid[j][k];
+                        if (currentBlock.objectType === "tracer") {
+                            grid[j][k] = null;
+                        }
+                    }
+                }
+            }
             framesPassed = 0;
             firstMousePos = null;
             mouseDistance = 0;
             mouseAngle = 0;
             game_state = "aiming";
             levelNum++;
+            for (i = 0; i < ballsGained; i++) {
+                balls.push(new Ball());
+            }
+            ballsGained = 0;
             gen_board();
+            if (gameFailed) {
+                game_state = "lost";
+            }
         }
     }
-    
     // update time
     previousTimestamp = timestamp;
-    
+
     // draw next frame
     requestAnimationFrame(draw);
 }
