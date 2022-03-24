@@ -6,6 +6,7 @@
 		<link href="static/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <title>Linear Algebra Game</title>
         <style>
             canvas {
@@ -23,12 +24,34 @@
 		</div>
 		<div class="container center text-center">
 		    <canvas id="gameCanvas" width="395" height="540"></canvas>
-		    <div id="overlay" style="display: none;"><p>Game lost!</p></div>
+		    <div id="overlay" class="p-3 overflow-auto" style="display: none;">
+		        <h3>Game over!</h3>
+		        <p>Your score was <span id="goScore"></span>. You also attempted to solve <span id="goNumSolved"></span> linear algebra problems and got <span id="goNumCorrect"></span> of them correct!</p>
+		        <button type="submit" id="startGameBtn" class="btn btn-primary">New Game</button>
+	        </div>
+		    <div class="p-3 overflow-auto" id="problemOverlay" style="display: none;">
+		        <h3>Problems for Powerups</h3>
+		        <p>You have <span id="numProblems"></span> remaining powerup(s) collected last round. Solve for following problems correctly to use them.</p>
+		        <p id="problemText"></p>
+		        <div class="form-group">
+                    <label for="answer">Answer:</label>
+                    <input type="number" class="form-control" id="answer" placeholder="Integer">
+                    <small class="form-text text-muted">Your answer should be an integer. If not, round to the nearest one.</small>
+                </div>
+                <button type="submit" id="problemSubmit" class="btn btn-primary">Submit</button>
+                <p style="display: none;" id="problemResult"></p>
+                <button style="display: none;" type="submit" id="continueProblem" class="btn btn-primary">Continue</button>
+	        </div>
 		</div>
 		<div class="container">
+		    <h3>Instructions:</h3>
 		    <p>Testing testing one two three.\( ax^2 + bx - c = 0 \) \(\begin{bmatrix}a & b\\c & d\end{bmatrix} \)</p>
 		    <ul>
 		        <li>Aim the initial trajectory of the ball</li>
+		    </ul>
+		    <h3>Known Issues</h3>
+		    <ul>
+		        <li></li>
 		    </ul>
 		</div>
         <script>
@@ -49,8 +72,8 @@
             // basic game variables
             var startX = canvas.width/2, startY = canvas.height-blockSize*2;
             var ballRadius = 10;
-            var game_state = "aiming";
-            var ballsMoving = 0, framesPassed = 0, framesBeforeShots = 5;
+            var game_state;
+            var ballsMoving, framesPassed, framesBeforeShots;
             var gameFailed = false;
             
             var grid = new Array(numBlocksHeight);
@@ -60,19 +83,49 @@
                     grid[i][j] = null;
                 }
             }
-            var levelNum = 1;
-            var ballsGained = 0;
-            var roundsSincePowerup = 0;
+            var levelNum;
+            var ballsGained;
+            var roundsSincePowerup;
+            var numberNewBalls;
+            var numSolved, numCorrect;
+            var balls;
         </script>
         <script src="static/mouse.js"></script>
         <script src="static/objects.js"></script>
         <script src="static/game.js"></script>
         <script src="static/board.js"></script>
+        <script src="static/problem.js"></script>
         <script>
             // start game
-            var balls = [new Ball()];
-            grid = gen_board();
-            requestAnimationFrame(draw);
+            function startGame() {
+                levelNum = 1;
+                ballsGained = 0;
+                roundsSincePowerup = 0;
+                numberNewBalls = 0;
+                
+                numSolved = 0;
+                numCorrect = 0;
+                
+                game_state = "aiming";
+                gameFailed = false;
+                
+                ballsMoving = 0, framesPassed = 0, framesBeforeShots = 5;
+                balls = [new Ball()];
+                grid = new Array(numBlocksHeight);
+                for (var i = 0; i < grid.length; i++) {
+                    grid[i] = new Array(numBlocksWidth);
+                    for (var j = 0; j < grid[i].length; j++) {
+                        grid[i][j] = null;
+                    }
+                }
+                grid = gen_board();
+                
+                $("#overlay").hide();
+                $("#gameCanvas").show();
+                
+                requestAnimationFrame(draw);
+            }
+            startGame();
         </script>
     </body>
 </html>

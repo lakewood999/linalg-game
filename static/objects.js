@@ -38,10 +38,9 @@ function Ball() {
         // only check neighboring cells for efficiency; need to adjust until a proper fix can be made
         var currentX = Math.min(numBlocksWidth-1,Math.max(0,Math.floor((this.x+dx-blockMargin/2)/(blockSize+blockMargin/2))));
         var currentY = Math.min(numBlocksHeight-1,Math.max(0,Math.floor((this.y+dy-blockMargin/2)/(blockSize+blockMargin/2))));
-        console.log(currentX + " " + currentY);
         if (grid[currentY][currentX] !== null) {
             if (grid[currentY][currentX].objectType === "powerup") {
-                ballsGained++;
+                numberNewBalls++;
                 grid[currentY][currentX] = null;
             }
         } else {
@@ -54,15 +53,6 @@ function Ball() {
             if (newY < 0 || newY > numBlocksHeight-1 || newX < 0 || newX > numBlocksWidth - 1) continue;
             var blockTest = grid[newY][newX];
             if (blockTest !== null && blockTest.objectType === "block") {
-                //blockTest.number = 100;
-                var testX = this.x, testY = this.y, isLeft = true, isAbove = true;
-                
-                // determine edges to use in collision detection
-                if (this.x+dx < blockTest.x) testX = blockTest.x; // left edge
-                else if (this.x+dx > blockTest.x+blockTest.len) testX = blockTest.x+blockTest.len; isLeft = false; // right edge
-                if (this.y < blockTest.y) testY = blockTest.y // top edge
-                else if (this.y+dy > blockTest.y+blockTest.len) testY = blockTest.y+blockTest.len; isAbove = false; // bottom edge
-                
                 // calculate distance
                 var rectCenter = {x: blockTest.x + blockTest.len/2, y: blockTest.y + blockTest.len/2};
                 var sides = {x: (this.x+dx) - rectCenter.x, y: (this.y+dy) - rectCenter.y};
@@ -73,29 +63,19 @@ function Ball() {
                     collided = true;
                 } else {
                     if (Math.abs(sides.y) > Math.abs(sides.x)) {
-                        if (Math.abs(sides.y+dy) <= this.radius + blockTest.len/2 + 12) { // vertical collision
-                            console.log("top");
+                        if (Math.abs(sides.y+dy) <= this.radius + blockTest.len/2 + 7) { // vertical collision
                             this.yVelocity = -this.yVelocity;
                             collided = true;
                         } else {
-                            console.log("failed top with ");
-                            console.log(sides);
                         }
                     } else if (Math.abs(sides.x) > Math.abs(sides.y)) {
-                        if (Math.abs(sides.x+dx) <= this.radius + blockTest.len/2 + 12) { // horizontal collision
-                            console.log("side");
+                        if (Math.abs(sides.x+dx) <= this.radius + blockTest.len/2 + 7) { // horizontal collision
                             this.xVelocity = -this.xVelocity;
                             collided = true;
                         } else {
-                            console.log("failed side with ");
-                            console.log(sides);
                         }
                     } else {
                         if (sides.y > 0) {
-                        console.log("missed");
-                        console.log(sides);
-                        console.log(currentX + " " + currentY);
-                        console.log(newY + " " + newX);
                         }
                     }
                 }

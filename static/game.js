@@ -48,6 +48,9 @@ function draw(timestamp) {
         overlay.style.display = "block";
         overlay.style.margin = "auto";
         overlay.style.border = "1px solid black";
+        $("#goScore").text(levelNum-1);
+        $("#goNumSolved").text(numSolved);
+        $("#goNumCorrect").text(numCorrect);
         return; // done with the game!
     }
     
@@ -128,6 +131,26 @@ function draw(timestamp) {
             gen_board();
             if (gameFailed) {
                 game_state = "lost";
+            }
+            if (numberNewBalls > 0) {
+                game_state = "solving";  
+            }
+        } else if (game_state === "solving") {
+            var problemOverlay = document.getElementById("problemOverlay");
+            if (numberNewBalls === 0) {
+                canvas.style.display = "inline";
+                problemOverlay.style.display = "none";
+                game_state = "aiming";  
+            } else {
+                if (problemOverlay.style.display === "none") {
+                    canvas.style.display = "none";
+                    problemOverlay.style.width = "" + canvas.width + "px";
+                    problemOverlay.style.height = "" + canvas.height + "px";
+                    problemOverlay.style.display = "block";
+                    problemOverlay.style.margin = "auto";
+                    problemOverlay.style.border = "1px solid black";
+                    startProblem();
+                }
             }
         }
     }
