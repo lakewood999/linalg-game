@@ -1,6 +1,37 @@
-/* Main Game Loop
+/* Main Game Functions
 */
+// start game
+function startGame() {
+    levelNum = 1;
+    effectiveLevel = 1;
+    ballsGained = 0;
+    roundsSincePowerup = 0;
+    numberNewBalls = 0, ballPowerupsOnBoard=0;
+    
+    numSolved = 0;
+    numCorrect = 0;
+    
+    game_state = "aiming";
+    gameFailed = false;
+    
+    ballsMoving = 0, framesPassed = 0, framesBeforeShots = 5;
+    balls = [new Ball()];
+    grid = new Array(numBlocksHeight);
+    for (var i = 0; i < grid.length; i++) {
+        grid[i] = new Array(numBlocksWidth);
+        for (var j = 0; j < grid[i].length; j++) {
+            grid[i][j] = null;
+        }
+    }
+    grid = gen_board();
+    
+    $("#overlay").hide();
+    $("#gameCanvas").show();
+    
+    requestAnimationFrame(draw);
+}
 
+// Main game loop
 let previousTimestamp = Date.now();
 function draw(timestamp) {
     // get the times
@@ -124,6 +155,10 @@ function draw(timestamp) {
             mouseAngle = 0;
             game_state = "aiming";
             levelNum++;
+            effectiveLevel++;
+            if (levelNum % 5 === 0) {
+                balls.push(new Ball()); // force new ball every 5 levels
+            }
             for (i = 0; i < ballsGained; i++) {
                 balls.push(new Ball());
             }
@@ -132,7 +167,7 @@ function draw(timestamp) {
             if (gameFailed) {
                 game_state = "lost";
             }
-            if (numberNewBalls > 0) {
+            if (!gameFailed && numberNewBalls > 0) {
                 game_state = "solving";  
             }
         } else if (game_state === "solving") {
@@ -160,3 +195,5 @@ function draw(timestamp) {
     // draw next frame
     requestAnimationFrame(draw);
 }
+
+startGame();

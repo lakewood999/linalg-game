@@ -1,7 +1,8 @@
 /* Objects used to draw the game board
 */
+var popSound = new Audio("static/pop.mp3");
 function Ball() {
-    this.radius = 9.5;
+    this.radius = ballRadius;
     this.x = startX; this.y = startY;
     this.moving = false;
     this.done = true; this.started = false; this.draw = draw;
@@ -42,6 +43,9 @@ function Ball() {
             if (grid[currentY][currentX].objectType === "powerup") {
                 numberNewBalls++;
                 grid[currentY][currentX] = null;
+                popSound.play();
+                popSound.currentTime = 0;
+                ballPowerupsOnBoard--;
             }
         } else {
             //grid[currentY][currentX] = new Powerup();
@@ -63,13 +67,13 @@ function Ball() {
                     collided = true;
                 } else {
                     if (Math.abs(sides.y) > Math.abs(sides.x)) {
-                        if (Math.abs(sides.y+dy) <= this.radius + blockTest.len/2 + 7) { // vertical collision
+                        if (Math.abs(sides.y+1.2*dy) <= this.radius + blockTest.len/2 + 6) { // vertical collision
                             this.yVelocity = -this.yVelocity;
                             collided = true;
                         } else {
                         }
                     } else if (Math.abs(sides.x) > Math.abs(sides.y)) {
-                        if (Math.abs(sides.x+dx) <= this.radius + blockTest.len/2 + 7) { // horizontal collision
+                        if (Math.abs(sides.x+1.2*dx) <= this.radius + blockTest.len/2 + 6) { // horizontal collision
                             this.xVelocity = -this.xVelocity;
                             collided = true;
                         } else {
@@ -85,6 +89,8 @@ function Ball() {
                     } else {
                         blockTest.number -= 1;
                     }
+                    popSound.play();
+                    popSound.currentTime = 0;
                     break;
                 }
             }

@@ -54,78 +54,11 @@
 		        <li></li>
 		    </ul>
 		</div>
-        <script>
-            /* Initial setup */
-            // Game block settings
-            var blockSize = 45;
-            var blockMargin = 5;
-            var numBlocksWidth = 7, numBlocksHeight = 10;
-            
-            // setup the canvas
-            var canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
-            canvas.width = numBlocksWidth * blockSize + blockMargin * (numBlocksWidth+1);
-            canvas.height = numBlocksHeight * blockSize + blockMargin * (numBlocksHeight+1) + blockSize*2; // last one adjusts for bottom bar
-            
-            // render setup
-            var targetFps = 60, targetElapsed = 1/60;
-            
-            // basic game variables
-            var startX = canvas.width/2, startY = canvas.height-blockSize*2;
-            var ballRadius = 10;
-            var game_state;
-            var ballsMoving, framesPassed, framesBeforeShots;
-            var gameFailed = false;
-            
-            var grid = new Array(numBlocksHeight);
-            for (var i = 0; i < grid.length; i++) {
-                grid[i] = new Array(numBlocksWidth);
-                for (var j = 0; j < grid[i].length; j++) {
-                    grid[i][j] = null;
-                }
-            }
-            var levelNum;
-            var ballsGained;
-            var roundsSincePowerup;
-            var numberNewBalls;
-            var numSolved, numCorrect;
-            var balls;
-        </script>
+        <script src="static/setup.js"></script>
         <script src="static/mouse.js"></script>
         <script src="static/objects.js"></script>
-        <script src="static/game.js"></script>
         <script src="static/board.js"></script>
         <script src="static/problem.js"></script>
-        <script>
-            // start game
-            function startGame() {
-                levelNum = 1;
-                ballsGained = 0;
-                roundsSincePowerup = 0;
-                numberNewBalls = 0;
-                
-                numSolved = 0;
-                numCorrect = 0;
-                
-                game_state = "aiming";
-                gameFailed = false;
-                
-                ballsMoving = 0, framesPassed = 0, framesBeforeShots = 5;
-                balls = [new Ball()];
-                grid = new Array(numBlocksHeight);
-                for (var i = 0; i < grid.length; i++) {
-                    grid[i] = new Array(numBlocksWidth);
-                    for (var j = 0; j < grid[i].length; j++) {
-                        grid[i][j] = null;
-                    }
-                }
-                grid = gen_board();
-                
-                $("#overlay").hide();
-                $("#gameCanvas").show();
-                
-                requestAnimationFrame(draw);
-            }
-            startGame();
-        </script>
+        <script src="static/game.js"></script>
     </body>
 </html>

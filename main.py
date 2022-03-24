@@ -20,11 +20,13 @@ def matrix_to_latex(m):
             s += "\\\\"
     return s + "\\end{bmatrix}"
 
-def gen_matrix(n=2):
+def gen_matrix(n=2,nn=-1):
+    if nn == -1:
+        nn = n
     m = []
     for i in range(n):
         t = []
-        for j in range(n):
+        for j in range(nn):
             t.append(randint(-10,10))
         m.append(t)
     return m
@@ -43,13 +45,21 @@ def determinant_problem(n=2):
     mm = sympy.Matrix(m)
     return matrix_to_latex(m), str(mm.det())
 
+def pivots_problem(r,c,target=-1):
+    m = gen_matrix(r,c)
+    num_pivots = len(sympy.Matrix(m).rref()[1])
+    while target != -1 and num_pivots != target:
+        m = gen_matrix(r,c)
+        num_pivots = len(sympy.Matrix(m).rref()[1])
+    return m, num_pivots
+
 @app.route("/")
 def home():
     return render_template("index.html")
     
 @app.route("/problem")
 def problem():
-    num = randint(0,3)
+    num = randint(0,4)
     if num == 0: # 2x2 determinant
         t, a = determinant_problem(2)
         session["answer"] = a
@@ -70,6 +80,8 @@ def problem():
         session["answer"] = ans
         b = sympy.Matrix(A) *sympy.Matrix(sol)
         return jsonify({"text":matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist()),"type":"matrix_equation"})
+    elif num == 4: # number of pivots
+        
         
 
 @app.route("/check")
