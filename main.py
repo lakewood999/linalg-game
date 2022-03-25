@@ -27,7 +27,7 @@ def gen_matrix(n=2,nn=-1):
     for i in range(n):
         t = []
         for j in range(nn):
-            t.append(randint(-10,10))
+            t.append(randint(-7,7))
         m.append(t)
     return m
     
@@ -35,7 +35,7 @@ def gen_sol(n=2):
     m = []
     s = 0
     for i in range(n):
-        v = randint(-10,10)
+        v = randint(-7,7)
         s += v
         m.append([v])
     return m, s
@@ -61,7 +61,6 @@ def home():
 @app.route("/problem")
 def problem():
     num = randint(0,5)
-    print(num)
     if num == 0: # 2x2 determinant
         t, a = determinant_problem(2)
         session["answer"] = a
@@ -86,16 +85,13 @@ def problem():
         matrices, ans = inner_product_problem(randint(2,4))
         session["answer"] = int(ans)
         res = {"text":"\mathbf{u}=" + matrix_to_latex(matrices[0]) + " \\textrm{ and } \mathbf{v}=" + matrix_to_latex(matrices[1]),"type":"inner_product"}
-        print(res)
         return jsonify({"text":"\mathbf{u}=" + matrix_to_latex(matrices[0]) + " \\textrm{ and } \mathbf{v}=" + matrix_to_latex(matrices[1]),"type":"inner_product"})
     elif num == 5: # matrix power
         k = randint(2,4)
         m, ans = matrix_power_problem(2,k)
         session["answer"] = int(ans)
         res = {"text":matrix_to_latex(m)+"^"+str(k),"type":"matrix_power"}
-        print(res)
         return jsonify(res)
-        
 
 @app.route("/check")
 def check():

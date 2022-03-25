@@ -3,7 +3,7 @@
 // start game
 function startGame() {
     levelNum = 1;
-    effectiveLevel = 1;
+    effectiveLevel = 1, levelBonus = 0;
     roundsSincePowerup = 0;
     powerups = new PowerupBank(), ballPowerupsOnBoard=0;
     
@@ -22,6 +22,7 @@ function startGame() {
             grid[i][j] = null;
         }
     }
+    ballPower = 1;
     grid = gen_board();
     
     $("#overlay").hide();
@@ -92,6 +93,8 @@ function draw(timestamp) {
         ctx.closePath();
         ctx.textAlign = "center";
         ctx.fillText(""+balls.length+" ball(s)", startX, startY + 30);
+        ctx.fillText("Power: "+ballPower, startX, startY + 45);
+        ctx.fillText("Level reduction: "+levelBonus, startX, startY + 60);
     }
     
     if (Math.abs(timeDelta-targetElapsed) < 0.01) {
@@ -156,14 +159,14 @@ function draw(timestamp) {
             levelNum++;
             effectiveLevel++;
             if (levelNum % 5 === 0) {
-                balls.push(new Ball()); // force new ball every 5 levels
+                //balls.push(new Ball()); // force new ball every 5 levels
+                powerups.add("newBall");
             }
             ballsGained = 0;
             gen_board();
             if (gameFailed) {
                 game_state = "lost";
             }
-            console.log(powerups);
             if (!gameFailed && powerups.total > 0) {
                 game_state = "solving";  
             }

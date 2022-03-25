@@ -55,14 +55,29 @@ function gen_board() {
     for (i = 0; i < numBlocksWidth; i++) {
         if (selected.includes(i)) {
             // ball chance depends on base, adjustment for levels since, and current level subtracting number available
-            if (Math.random() < 0.4 + percentBonus + Math.max(0, Math.log(0.4*roundsSincePowerup+0.7)) 
-                                + Math.max(0,-0.5*(balls.length/effectiveLevel-0.5)) 
-                                - (4/3)*(ballPowerupsOnBoard+balls.length)/effectiveLevel) {
+            var percent = Math.random();
+            var b1 = Math.min(0.6,0.35 + percentBonus + Math.max(0, Math.log(0.4*roundsSincePowerup+0.7)) 
+            + Math.max(0,-0.5*(balls.length/effectiveLevel-0.5)))
+            - (4/3)*(ballPowerupsOnBoard+balls.length)/effectiveLevel;
+            var b2 = b1 + 0.025;
+            var b3 = b2 + 0.05;
+            console.log(b1);
+            if (percent < b1) {
                 newBlocks[i] = new Powerup();
                 newBlocks[i].color = 86;
                 gotPowerup = true;
                 roundsSincePowerup = 0;
                 ballPowerupsOnBoard++;
+            } else if (percent < b2) {
+                newBlocks[i] = new Powerup();
+                newBlocks[i].color = 231;
+                newBlocks[i].boost = "ballPowerup";
+                gotPowerup = true;
+            } else if (percent < b3) {
+                newBlocks[i] = new Powerup();
+                newBlocks[i].color = 353;
+                newBlocks[i].boost = "lowerEffectiveLevel";
+                gotPowerup = true;
             } else {
                 newBlocks[i] = new Block();
                 var lvlChance = Math.random();
@@ -80,7 +95,7 @@ function gen_board() {
                 } else if (lvlChance < 0.95) {
                     lvlChance = -2;
                 }
-                newBlocks[i].number = Math.max(1,effectiveLevel+lvlAdjust);
+                newBlocks[i].number = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus);
                 newBlocks[i].len = blockSize;
             }
         } else {

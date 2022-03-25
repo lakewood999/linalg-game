@@ -1,4 +1,8 @@
 function startProblem() {
+    $("#fiveRoundBonus").hide();
+    if (levelNum % 5 === 0) {
+        $("#fiveRoundBonus").show();
+    } 
     currentPowerup = powerups.next();
     var problemString = "";
     $.getJSON("/problem",function(data) {
@@ -42,7 +46,6 @@ $("#problemSubmit").on("click", function(){
             powerups.apply(currentPowerup,true);
             numCorrect++;
         } else {
-            console.log(data);
             $("#problemResult").toggleClass("text-danger",true);
             $("#problemResult").html("Sorry, that's incorrect. The correct answer is " + data["actual"] + ". Better luck next time!");
             powerups.apply(currentPowerup,false);

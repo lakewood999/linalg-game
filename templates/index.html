@@ -31,7 +31,7 @@
 	        </div>
 		    <div class="p-3 overflow-auto" id="problemOverlay" style="display: none;">
 		        <h3>Problems for Powerups</h3>
-		        <p>You have <span id="numProblems"></span> remaining powerup(s) collected last round. Solve the following problems to activate them.</p>
+		        <p>You have <span id="numProblems"></span> remaining powerup(s) collected last round<span style="display: none;" id="fiveRoundBonus">, including the one free ball from every 5 rounds</span>. Solve the following problems to activate them.</p>
 		        <p id="problemText"></p>
 		        <div class="form-group">
                     <label for="answer">Answer:</label>
@@ -50,12 +50,13 @@
 		        <li>On the game window, click anwhere and drag away downwards to start the aiming process. A ray will appear from the ball on the line showing the angle of launch and the thickness of the line represents the speed of the balls. Dragging further from the initial position increases thickness. To cancel the aiming process, drag upwards until the aiming ray disappears.</li>
 				<li>Release your click to start the ball launching process.</li>
 				<li>Every 5 levels, you will get an extra ball automatically. However, in order to succeed at higher levels, you will need to collect powerups randomly generated each level and solve linear algebra problems correctly to have enough balls to deal with the increasing numbers on the blocks.</li>
+				<li><b>Powerups: </b>green are extra balls, blue increase the power of the ball, green are effective level reducations (reduces the number on blocks)</li>
 		    </ul>
 		    <h3>Known Issues</h3>
 			<p>This is my first time making a game and I learned a lot of the animation/Javascript canvas stuff on the fly so there are some minor issues considering the relatively short time frame available in making this. I have spent numerous hours trying to address bugs in addition to the initial game creation, and this is the best I can do so far. However, the game is definitely in a playable state.</p>
 		    <ul>
 		        <li>Collision detection between the balls and blocks <em>can</em> be a little glitchy. This is a self-made system and there are some glitches that I cannot seem to figure out. (Game design is hard when you don't use an engine!)</li>
-				<li>There might be some adjustments that can be made for level scaling to balance the games difficulty. Level design is hard.</li>
+				<li>There might be some adjustments that can be made for level scaling to balance the games difficulty but this is hard to determine. Level design is hard, especially when it is randomly generated.</li>
 		    </ul>
 		</div>
         <script src="static/setup.js"></script>

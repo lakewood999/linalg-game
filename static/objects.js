@@ -84,10 +84,10 @@ function Ball() {
                     }
                 }
                 if (collided) {
-                    if (blockTest.number - 1 === 0) {
+                    if (blockTest.number - ballPower <= 0) {
                         grid[newY][newX] = null;
                     } else {
-                        blockTest.number -= 1;
+                        blockTest.number -= ballPower;
                     }
                     popSound.play();
                     popSound.currentTime = 0;
@@ -117,7 +117,7 @@ function Block() {
 }
 
 function PowerupBank() {
-    this.d = {"newBall":0};
+    this.d = {"newBall":0,"ballPowerup":0,"lowerEffectiveLevel":0};
     this.total = 0;
     this.apply = apply;
     this.next = next;
@@ -135,6 +135,10 @@ function PowerupBank() {
         if (success) {
             if (t === "newBall") {
                 balls.push(new Ball());
+            } else if (t === "ballPowerup") {
+                ballPower++;
+            } else if (t === "lowerEffectiveLevel") {
+                levelBonus++;
             }
         }
     }
@@ -152,6 +156,10 @@ function PowerupBank() {
     function keyEnglish(k) {
         if (k == "newBall") {
             return "get 1 extra ball";
+        } else if (k == "ballPowerup") {
+            return "increase power by 1";
+        } else if (k === "lowerEffectiveLevel") {
+            return "lower block levels by 1";
         }
     }
 }

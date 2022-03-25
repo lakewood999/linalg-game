@@ -26,8 +26,8 @@ for (var i = 0; i < grid.length; i++) {
         grid[i][j] = null;
     }
 }
-var levelNum, effectiveLevel;
+var levelNum, effectiveLevel, levelBonus;
 var roundsSincePowerup;
 var powerups, ballPowerupsOnBoard, currentPowerup = "";
 var numSolved, numCorrect;
-var balls;
+var balls, ballPower;
