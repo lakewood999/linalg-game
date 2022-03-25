@@ -60,34 +60,27 @@ def home():
     
 @app.route("/problem")
 def problem():
-    num = randint(0,5)
+    n = randint(2,3)
+    if "easy" in request.args and request.args["easy"] == "true":
+        n = 2
+    num = randint(0,3)
     if num == 0: # 2x2 determinant
-        t, a = determinant_problem(2)
+        t, a = determinant_problem(n)
         session["answer"] = a
         return jsonify({"text":t,"type":"determinant"})
-    elif num == 1: # 3x3 determinant
-        t, a = determinant_problem(3)
-        session["answer"] = a
-        return jsonify({"text":t,"type":"determinant"})
-    elif num == 2: # 2 variable system
-        A = gen_matrix()
-        sol, ans = gen_sol()
+    elif num == 1: # 2 variable system
+        A = gen_matrix(n)
+        sol, ans = gen_sol(n)
         b = sympy.Matrix(A) *sympy.Matrix(sol)
         session["answer"] = ans
         return jsonify({"text":matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist()),"type":"matrix_equation"})
-    elif num == 3: # 3 variable system
-        A = gen_matrix(3)
-        sol, ans = gen_sol(3)
-        session["answer"] = ans
-        b = sympy.Matrix(A) *sympy.Matrix(sol)
-        return jsonify({"text":matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist()),"type":"matrix_equation"})
-    elif num == 4: # inner product
+    elif num == 2: # inner product
         matrices, ans = inner_product_problem(randint(2,4))
         session["answer"] = int(ans)
         res = {"text":"\mathbf{u}=" + matrix_to_latex(matrices[0]) + " \\textrm{ and } \mathbf{v}=" + matrix_to_latex(matrices[1]),"type":"inner_product"}
         return jsonify({"text":"\mathbf{u}=" + matrix_to_latex(matrices[0]) + " \\textrm{ and } \mathbf{v}=" + matrix_to_latex(matrices[1]),"type":"inner_product"})
-    elif num == 5: # matrix power
-        k = randint(2,4)
+    elif num == 3: # matrix power
+        k = 2#randint(2,4)
         m, ans = matrix_power_problem(2,k)
         session["answer"] = int(ans)
         res = {"text":matrix_to_latex(m)+"^"+str(k),"type":"matrix_power"}

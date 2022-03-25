@@ -5,7 +5,7 @@ function startProblem() {
     } 
     currentPowerup = powerups.next();
     var problemString = "";
-    $.getJSON("/problem",function(data) {
+    $.getJSON("/problem?easy="+$("#2b2Matrices").checked,function(data) {
         $("#numProblems").text(powerups.total);
         if (data["type"] === "determinant") {
             problemString = "Find the determinant of the following matrix: $$ " + data["text"] + "$$ to ";
@@ -39,6 +39,7 @@ $("#problemSubmit").on("click", function(){
     $("#answer").prop("disabled", true);
     $("#problemResult").html("");
     numSolved++;
+    var newAttempt = false;
     $.getJSON("/check?answer="+$("#answer").val(),function(data) {
         if (data["result"] == "correct") {
             $("#problemResult").toggleClass("text-success",true);
@@ -46,13 +47,25 @@ $("#problemSubmit").on("click", function(){
             powerups.apply(currentPowerup,true);
             numCorrect++;
         } else {
-            $("#problemResult").toggleClass("text-danger",true);
-            $("#problemResult").html("Sorry, that's incorrect. The correct answer is " + data["actual"] + ". Better luck next time!");
-            powerups.apply(currentPowerup,false);
+            if ($("#moreProblemChances").checked && problemChances > 0) {
+                $("#problemResult").toggleClass("text-danger",true);
+                $("#problemResult").html("Sorry, that's incorrect. Try again! You have " + problemChances + " more attempts.");
+                newAttempt = true;
+            } else {
+                $("#problemResult").toggleClass("text-danger",true);
+                $("#problemResult").html("Sorry, that's incorrect. The correct answer is " + data["actual"] + ". Better luck next time!");
+                powerups.apply(currentPowerup,false);
+            }
         }
     });
     $("#problemResult").show();
-    $("#continueProblem").show();
+    if (!newAttempt) {
+        $("#continueProblem").show();
+    } else {
+        $("#continueProblem").hide();
+        $("#problemSubmit").prop("disabled", true);
+        $("#answer").prop("disabled", true);
+    }
 })
 
 $("#startGameBtn").on("click", function(){

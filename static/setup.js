@@ -2,7 +2,7 @@
 // Game block settings
 var blockSize = 45;
 var blockMargin = 5;
-var numBlocksWidth = 7, numBlocksHeight = 10;
+var numBlocksWidth = 7, numBlocksHeight = 12;
 
 // setup the canvas
 var canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
@@ -29,5 +29,5 @@ for (var i = 0; i < grid.length; i++) {
 var levelNum, effectiveLevel, levelBonus;
 var roundsSincePowerup;
 var powerups, ballPowerupsOnBoard, currentPowerup = "";
-var numSolved, numCorrect;
+var numSolved, numCorrect, problemChances;
 var balls, ballPower;

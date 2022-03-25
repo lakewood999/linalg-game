@@ -160,7 +160,11 @@ function draw(timestamp) {
             effectiveLevel++;
             if (levelNum % 5 === 0) {
                 //balls.push(new Ball()); // force new ball every 5 levels
-                powerups.add("newBall");
+                if ($("#freeBallProblem").checked) {
+                    powerups.add("newBall");
+                } else {
+                    balls.push(new Ball());
+                }
             }
             ballsGained = 0;
             gen_board();
@@ -168,6 +172,7 @@ function draw(timestamp) {
                 game_state = "lost";
             }
             if (!gameFailed && powerups.total > 0) {
+                problemChances = 3;
                 game_state = "solving";  
             }
         } else if (game_state === "solving") {
