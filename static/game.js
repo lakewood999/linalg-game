@@ -4,9 +4,8 @@
 function startGame() {
     levelNum = 1;
     effectiveLevel = 1;
-    ballsGained = 0;
     roundsSincePowerup = 0;
-    numberNewBalls = 0, ballPowerupsOnBoard=0;
+    powerups = new PowerupBank(), ballPowerupsOnBoard=0;
     
     numSolved = 0;
     numCorrect = 0;
@@ -159,20 +158,18 @@ function draw(timestamp) {
             if (levelNum % 5 === 0) {
                 balls.push(new Ball()); // force new ball every 5 levels
             }
-            for (i = 0; i < ballsGained; i++) {
-                balls.push(new Ball());
-            }
             ballsGained = 0;
             gen_board();
             if (gameFailed) {
                 game_state = "lost";
             }
-            if (!gameFailed && numberNewBalls > 0) {
+            console.log(powerups);
+            if (!gameFailed && powerups.total > 0) {
                 game_state = "solving";  
             }
         } else if (game_state === "solving") {
             var problemOverlay = document.getElementById("problemOverlay");
-            if (numberNewBalls === 0) {
+            if (powerups.total === 0) {
                 canvas.style.display = "inline";
                 problemOverlay.style.display = "none";
                 game_state = "aiming";  

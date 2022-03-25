@@ -1,13 +1,20 @@
 function startProblem() {
+    currentPowerup = powerups.next();
+    var problemString = "";
     $.getJSON("/problem",function(data) {
-        $("#numProblems").text(numberNewBalls);
+        $("#numProblems").text(powerups.total);
         if (data["type"] === "determinant") {
-            $("#problemText").html("Find the determinant of the following matrix: $$ " + data["text"] + "$$ to get 1 extra ball.");
-            MathJax.typeset();
+            problemString = "Find the determinant of the following matrix: $$ " + data["text"] + "$$ to ";
         } else if (data["type"] === "matrix_equation") {
-            $("#problemText").html("Find the sum of all \\( x_i \\) in the solution to the following matrix equation: $$ " + data["text"] + "$$ to get 1 extra ball.");
-            MathJax.typeset();
+            problemString = "Find the sum of all \\( x_i \\) in the solution to the following matrix equation: $$ " + data["text"] + "$$ to ";
+        } else if (data["type"] === "inner_product") {
+            problemString = "Find the inner product of the following vectors: $$ " + data["text"] + "$$ to ";
+        } else if (data["type"] === "matrix_power") {
+            problemString = "Find the sum of the values in the matrix resulting from the following expression: $$ " + data["text"] + "$$ to ";
         }
+        problemString += powerups.keyEnglish(currentPowerup);
+        $("#problemText").text(problemString);
+        MathJax.typeset();
         $("#problemSubmit").prop("disabled", false);
         $("#answer").prop("disabled", false);
         game_state = "in_problem";
@@ -15,22 +22,30 @@ function startProblem() {
 }
 
 $("#problemSubmit").on("click", function(){
+    $("#problemResult").toggleClass("text-success",false);
+    $("#problemResult").toggleClass("text-danger",false);
+    $("#problemResult").toggleClass("text-warning",false);
+    if ($("#answer").val() === "") {
+        $("#problemResult").html("Your answer is blank!");
+        $("#problemResult").show();
+        $("#problemResult").toggleClass("text-warning",true);
+        return;
+    }
     $("#problemSubmit").prop("disabled", true);
     $("#answer").prop("disabled", true);
-    numberNewBalls--;
+    $("#problemResult").html("");
     numSolved++;
     $.getJSON("/check?answer="+$("#answer").val(),function(data) {
         if (data["result"] == "correct") {
-            balls.push(new Ball());
             $("#problemResult").toggleClass("text-success",true);
-            $("#problemResult").toggleClass("text-danger",false);
             $("#problemResult").html("Correct!");
+            powerups.apply(currentPowerup,true);
             numCorrect++;
         } else {
             console.log(data);
-            $("#problemResult").toggleClass("text-success",false);
             $("#problemResult").toggleClass("text-danger",true);
             $("#problemResult").html("Sorry, that's incorrect. The correct answer is " + data["actual"] + ". Better luck next time!");
+            powerups.apply(currentPowerup,false);
         }
     });
     $("#problemResult").show();
@@ -47,7 +62,7 @@ $("#continueProblem").on("click", function(){
     $("#problemSubmit").prop("disabled", false);
     $("#answer").val("");
     $("#answer").prop("disabled", false);
-    if (numberNewBalls === 0) {
+    if (powerups.total === 0) {
         console.log("finished with problems!");
         game_state = "solving";
     } else {

@@ -19,7 +19,7 @@
         <div class="container">
 		    <div class="pt-5 pb-3 text-center">
 		        <h1>Ballz - Linear Algebra Version</h1>
-		        <p class="lead">This game is an adaptation of the (formerly) popular <a href="https://play.google.com/store/apps/details?id=com.ketchapp.ballz&hl=en_US&gl=US">Ballz</a> mobile game incorporating more linear algebra components. There is linear algebra involved in the inner workings of the game for the pathing of the ball, but also in the gameplay where players need to solve problems for their benefit to better track the path of the balls and to unlock powerups.</p>
+		        <p class="lead">This game is an adaptation of the (formerly) popular <a href="https://play.google.com/store/apps/details?id=com.ketchapp.ballz&hl=en_US&gl=US">Ballz</a> mobile game rewritten from scratch in Javascript incorporating more linear algebra components. There is a tiny bit of linear algebra involved in the inner workings of the game for the pathing of the ball, but the bulk of the practice in the gameplay comes from players needing to solve problems to unlock vital powerups.</p>
 		    </div>
 		</div>
 		<div class="container center text-center">
@@ -31,7 +31,7 @@
 	        </div>
 		    <div class="p-3 overflow-auto" id="problemOverlay" style="display: none;">
 		        <h3>Problems for Powerups</h3>
-		        <p>You have <span id="numProblems"></span> remaining powerup(s) collected last round. Solve for following problems correctly to use them.</p>
+		        <p>You have <span id="numProblems"></span> remaining powerup(s) collected last round. Solve the following problems to activate them.</p>
 		        <p id="problemText"></p>
 		        <div class="form-group">
                     <label for="answer">Answer:</label>
@@ -45,13 +45,17 @@
 		</div>
 		<div class="container">
 		    <h3>Instructions:</h3>
-		    <p>Testing testing one two three.\( ax^2 + bx - c = 0 \) \(\begin{bmatrix}a & b\\c & d\end{bmatrix} \)</p>
+		    <p>The objective of the game is to keep the blocks from reaching the bottom line. Each level, a new row of blocks will be generated at the top, with the current rows being pushed down one level. Each block has a certain number representing the number of times it needs to be hit by a ball. You have the opportunity to aim and set an initial trajectory each level where all of your balls (you have only one initially) will travel. Collect rings and solve linear algebra problems to unlock powerups (at the moment, the only one gives extra balls).</p>
 		    <ul>
-		        <li>Aim the initial trajectory of the ball</li>
+		        <li>On the game window, click anwhere and drag away downwards to start the aiming process. A ray will appear from the ball on the line showing the angle of launch and the thickness of the line represents the speed of the balls. Dragging further from the initial position increases thickness. To cancel the aiming process, drag upwards until the aiming ray disappears.</li>
+				<li>Release your click to start the ball launching process.</li>
+				<li>Every 5 levels, you will get an extra ball automatically. However, in order to succeed at higher levels, you will need to collect powerups randomly generated each level and solve linear algebra problems correctly to have enough balls to deal with the increasing numbers on the blocks.</li>
 		    </ul>
 		    <h3>Known Issues</h3>
+			<p>This is my first time making a game and I learned a lot of the animation/Javascript canvas stuff on the fly so there are some minor issues considering the relatively short time frame available in making this. I have spent numerous hours trying to address bugs in addition to the initial game creation, and this is the best I can do so far. However, the game is definitely in a playable state.</p>
 		    <ul>
-		        <li></li>
+		        <li>Collision detection between the balls and blocks <em>can</em> be a little glitchy. This is a self-made system and there are some glitches that I cannot seem to figure out. (Game design is hard when you don't use an engine!)</li>
+				<li>There might be some adjustments that can be made for level scaling to balance the games difficulty. Level design is hard.</li>
 		    </ul>
 		</div>
         <script src="static/setup.js"></script>

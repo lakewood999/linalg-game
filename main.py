@@ -45,13 +45,14 @@ def determinant_problem(n=2):
     mm = sympy.Matrix(m)
     return matrix_to_latex(m), str(mm.det())
 
-def pivots_problem(r,c,target=-1):
-    m = gen_matrix(r,c)
-    num_pivots = len(sympy.Matrix(m).rref()[1])
-    while target != -1 and num_pivots != target:
-        m = gen_matrix(r,c)
-        num_pivots = len(sympy.Matrix(m).rref()[1])
-    return m, num_pivots
+def inner_product_problem(n):
+    a = gen_matrix(n,1)
+    b = gen_matrix(n,1)
+    return [a,b], (sympy.Matrix(a).T * sympy.Matrix(b))[0]
+
+def matrix_power_problem(n,k):
+    a = gen_matrix(n)
+    return a, sum(sympy.Matrix(a)**k)
 
 @app.route("/")
 def home():
@@ -59,7 +60,8 @@ def home():
     
 @app.route("/problem")
 def problem():
-    num = randint(0,4)
+    num = randint(0,5)
+    print(num)
     if num == 0: # 2x2 determinant
         t, a = determinant_problem(2)
         session["answer"] = a
@@ -80,8 +82,19 @@ def problem():
         session["answer"] = ans
         b = sympy.Matrix(A) *sympy.Matrix(sol)
         return jsonify({"text":matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist()),"type":"matrix_equation"})
-    elif num == 4: # number of pivots
-        
+    elif num == 4: # inner product
+        matrices, ans = inner_product_problem(randint(2,4))
+        session["answer"] = int(ans)
+        res = {"text":"\mathbf{u}=" + matrix_to_latex(matrices[0]) + " \\textrm{ and } \mathbf{v}=" + matrix_to_latex(matrices[1]),"type":"inner_product"}
+        print(res)
+        return jsonify({"text":"\mathbf{u}=" + matrix_to_latex(matrices[0]) + " \\textrm{ and } \mathbf{v}=" + matrix_to_latex(matrices[1]),"type":"inner_product"})
+    elif num == 5: # matrix power
+        k = randint(2,4)
+        m, ans = matrix_power_problem(2,k)
+        session["answer"] = int(ans)
+        res = {"text":matrix_to_latex(m)+"^"+str(k),"type":"matrix_power"}
+        print(res)
+        return jsonify(res)
         
 
 @app.route("/check")

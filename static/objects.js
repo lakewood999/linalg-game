@@ -41,11 +41,11 @@ function Ball() {
         var currentY = Math.min(numBlocksHeight-1,Math.max(0,Math.floor((this.y+dy-blockMargin/2)/(blockSize+blockMargin/2))));
         if (grid[currentY][currentX] !== null) {
             if (grid[currentY][currentX].objectType === "powerup") {
-                numberNewBalls++;
-                grid[currentY][currentX] = null;
+                powerups.add(grid[currentY][currentX].boost);
                 popSound.play();
                 popSound.currentTime = 0;
-                ballPowerupsOnBoard--;
+                if (grid[currentY][currentX].boost === "newBall") ballPowerupsOnBoard--;
+                grid[currentY][currentX] = null;
             }
         } else {
             //grid[currentY][currentX] = new Powerup();
@@ -116,10 +116,51 @@ function Block() {
     }
 }
 
+function PowerupBank() {
+    this.d = {"newBall":0};
+    this.total = 0;
+    this.apply = apply;
+    this.next = next;
+    this.keyEnglish = keyEnglish;
+    this.add = add;
+
+    function add(t) {
+        this.d[t]++;
+        this.total++;
+    }
+
+    function apply(t, success) {
+        this.d[t] = this.d[t] - 1;
+        this.total--;
+        if (success) {
+            if (t === "newBall") {
+                balls.push(new Ball());
+            }
+        }
+    }
+
+    function next() {
+        while (true) {
+            var randomPowerup = Math.floor(Math.random()*Object.keys(this.d).length);
+            var randomKey = Object.keys(this.d)[randomPowerup];
+            if (this.d[randomKey] > 0) {
+                return randomKey;
+            }
+        }
+    }
+
+    function keyEnglish(k) {
+        if (k == "newBall") {
+            return "get 1 extra ball";
+        }
+    }
+}
+
 function Powerup() {
     this.x = 0, this.y = 0;
     this.draw = draw;
     this.objectType = "powerup";
+    this.boost = "newBall";
     this.id = 0;
     this.color = 86;
     
