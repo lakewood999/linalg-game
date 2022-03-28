@@ -66,11 +66,11 @@ function gen_board() {
             // ball chance depends on base, adjustment for levels since, and current level subtracting number available
             var percent = Math.random();
             // list of chances for the different powerups
-            var b1 = Math.min(0.6,0.35 + percentBonus + Math.max(0, Math.log(0.4*roundsSincePowerup+0.7)) 
+            var b1 = Math.min(0.65,0.35 + percentBonus + Math.max(0, Math.log(0.4*roundsSincePowerup+0.7)) 
             + Math.max(0,-0.5*(balls.length/effectiveLevel-0.5)))
             - (4/3)*(ballPowerupsOnBoard+balls.length)/effectiveLevel;
-            var b2 = b1 + 0.035;
-            var b3 = b2 + 0.075;
+            var b2 = b1 + 0.015;
+            var b3 = b2 + 0.045;
             if (percent < b1) {
                 newBlocks[i] = new Powerup();
                 newBlocks[i].color = 86;
