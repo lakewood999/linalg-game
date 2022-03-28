@@ -52,11 +52,8 @@ function Ball() {
             var newXVelocity = this.xVelocity * wallHorizontalMatrix[0].x + this.yVelocity * wallHorizontalMatrix[0].y;
             var newYVelocity = this.xVelocity * wallHorizontalMatrix[1].x + this.yVelocity * wallHorizontalMatrix[1].y;
             var k = Math.sqrt(speedSquared/(Math.pow(newXVelocity,2)+Math.pow(newYVelocity,2)));
-            console.log(k);
-            console.log(newXVelocity + " and " + newYVelocity + " and " + speedSquared);
             this.xVelocity = k*newXVelocity;
             this.yVelocity = k*newYVelocity;
-            console.log(Math.pow(this.xVelocity,2) + Math.pow(this.yVelocity,2))
         }
         // block collision detection
         // only check neighboring cells for efficiency; need to adjust until a proper fix can be made
