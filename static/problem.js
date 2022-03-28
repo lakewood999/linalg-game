@@ -9,7 +9,7 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 function startProblem() {
     $("#fiveRoundBonus").hide();
-    if (levelNum % 5 === 0) {
+    if (levelNum % 5 === 0 && !$("#freeBallProblem").prop("checked")) {
         $("#fiveRoundBonus").show();
     } 
     currentPowerup = powerups.next();
