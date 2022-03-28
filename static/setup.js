@@ -12,7 +12,7 @@ You should have received a copy of the GNU Affero General Public License along w
 // Game block settings
 var blockSize = 45;
 var blockMargin = 5;
-var numBlocksWidth = 7, numBlocksHeight = 12;
+var numBlocksWidth = 7, numBlocksHeight = 10;
 
 // setup the canvas
 var canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
