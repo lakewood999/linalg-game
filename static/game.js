@@ -1,5 +1,22 @@
+/*
+Copyright 2022 Steven Su
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 /* Main Game Functions
 */
+$("#setHtm").on("click", function(){
+    wallHorizontalMatrix[0].x = $("#htm1").val();
+    wallHorizontalMatrix[0].y = $("#htm2").val();
+    wallHorizontalMatrix[1].x = $("#htm3").val();
+    wallHorizontalMatrix[1].y = $("#htm4").val();
+    alert("Set wall horizontal collision matrix!");
+})
+
 // start game
 function startGame() {
     levelNum = 1;
@@ -160,7 +177,7 @@ function draw(timestamp) {
             effectiveLevel++;
             if (levelNum % 5 === 0) {
                 //balls.push(new Ball()); // force new ball every 5 levels
-                if ($("#freeBallProblem").checked) {
+                if ($("#freeBallProblem").prop("checked")) {
                     powerups.add("newBall");
                 } else {
                     balls.push(new Ball());

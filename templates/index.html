@@ -1,3 +1,12 @@
+<!--
+	Copyright 2022 Steven Su
+
+	This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
 <!DOCTYPE HTML>
 <html>
     <head>
@@ -38,7 +47,7 @@
                     <input type="number" class="form-control" id="answer" placeholder="Integer">
                     <small class="form-text text-muted">Your answer should be an integer. If not, round to the nearest one.</small>
                 </div>
-                <button type="submit" id="problemSubmit" class="btn btn-primary">Submit</button>
+                <button type="submit" id="problemSubmit" class="btn btn-primary">Check Answer</button>
                 <p style="display: none;" id="problemResult"></p>
                 <button style="display: none;" type="submit" id="continueProblem" class="btn btn-primary">Continue</button>
 	        </div>
@@ -46,26 +55,54 @@
 		<div class="container">
 			<h3>Difficulty Configuration</h3>
 			<p>Change some settings to reduce the amount of math you have to do or to make the game slightly easier.</p>
-			<div class="form-check">
-				<input class="form-check-input" type="checkbox" id="freeBallProblem">
-				<label class="form-check-label" for="freeBallProblem">
-					Math problem with free ball
-				</label>
+			<div class="mb-3">
+				<h4>Math Config</h4>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="freeBallProblem">
+					<label class="form-check-label" for="freeBallProblem">
+						Math problem with free ball
+					</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="2b2Matrices" checked>
+					<label class="form-check-label" for="2b2Matrices">
+						2-by-2 matrices only
+					</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="moreProblemChances" checked>
+					<label class="form-check-label" for="2b2Matrices">
+						Allow 3 tries for problems
+					</label>
+				</div>
 			</div>
-			<div class="form-check">
-				<input class="form-check-input" type="checkbox" id="2b2Matrices" checked>
-				<label class="form-check-label" for="2b2Matrices">
-					2-by-2 matrices only
-				</label>
-			</div>
-			<div class="form-check">
-				<input class="form-check-input" type="checkbox" id="moreProblemChances" checked>
-				<label class="form-check-label" for="2b2Matrices">
-					Allow 3 tries for problems
-				</label>
-			</div>
+			<!--<div class="mb-3">
+				<h4>Collission Mechanics</h4>
+				<p>This option allows you to mess with the main horizontal wall collision mechanics. It is by default setup with a transformation that keeps the y velocity and negates the x as expected normally. Note that you <em>can</em> play with shears and scaling, but the transformations are applied in a way such that velocities are maintained so take that as you will. <b>It is very easy to break the game with this feature (e.g. setting purely horizontal/vertical motion, setting 0 velocity, etc.), so do with that what you will.</b></p>
+				<div class="col-md-4">
+					<div class="row mb-3">
+						<div class="col">
+						<input type="number" class="form-control" placeholder="-1" id="htm1">
+						</div>
+						<div class="col">
+						<input type="number" class="form-control" placeholder="0" id="htm2">
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col">
+						<input type="number" class="form-control" placeholder="0" id="htm3">
+						</div>
+						<div class="col">
+						<input type="number" class="form-control" placeholder="1" id="htm4">
+						</div>
+					</div>
+					<div class="row mb-3">
+						<button type="submit" id="setHtm" class="btn btn-primary">Set Horizontal Wall Transformation</button>
+					</div>
+				</div>
+			</div>-->
 		</div>
-		<div class="container">
+		<div class="container mb-3">
 		    <h3>Instructions:</h3>
 		    <p>The objective of the game is to keep the blocks from reaching the bottom line. Each level, a new row of blocks will be generated at the top, with the current rows being pushed down one level. Each block has a certain number representing the number of times it needs to be hit by a ball. You have the opportunity to aim and set an initial trajectory each level where all of your balls (you have only one initially) will travel. Collect rings and solve linear algebra problems to unlock powerups (at the moment, the only one gives extra balls).</p>
 		    <ul>
@@ -74,12 +111,24 @@
 				<li>Every 5 levels, you will get an extra ball automatically. However, in order to succeed at higher levels, you will need to collect powerups randomly generated each level and solve linear algebra problems correctly to have enough balls to deal with the increasing numbers on the blocks.</li>
 				<li><b>Powerups: </b>green are extra balls, blue increase the power of the ball, green are effective level reducations (reduces the number on blocks)</li>
 		    </ul>
-		    <h3>Known Issues</h3>
+		</div>
+		<div class="container mb-3">
+			<h3>Known Issues</h3>
 			<p>This is my first time making a game and I learned a lot of the animation/Javascript canvas stuff on the fly so there are some minor issues considering the relatively short time frame available in making this. I have spent numerous hours trying to address bugs in addition to the initial game creation, and this is the best I can do so far. However, the game is definitely in a playable state.</p>
 		    <ul>
 		        <li>Collision detection between the balls and blocks <em>can</em> be a little glitchy. This is a self-made system and there are some glitches that I cannot seem to figure out. (Game design is hard when you don't use an engine!)</li>
 				<li>There might be some adjustments that can be made for level scaling to balance the games difficulty but this is hard to determine. Level design is hard, especially when it is randomly generated.</li>
 		    </ul>
+		</div>
+		<div class="container mb-3">
+			<h3>Things Used</h3>
+			<p>These are the main packages and tools used to make this game.</p>
+			<ul>
+				<li><a href="https://www.python.org/">Python</a>, <a href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a>, and <a href="https://www.sympy.org/en/index.html">SymPy</a></li>
+				<li><a href="https://jquery.com/">jQuery</a> and plain Javascript</li>
+				<li><a href="https://getbootstrap.com/">Bootstrap</a></li>
+				<li>The code for this site is available at my <a href="https://git.stevensu.dev/lakewood999/linalg-game">GitLab</a></li>
+			</ul>
 		</div>
         <script src="static/setup.js"></script>
         <script src="static/mouse.js"></script>

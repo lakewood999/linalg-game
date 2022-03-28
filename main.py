@@ -1,3 +1,12 @@
+"""
+Copyright 2022 Steven Su
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+"""
 from flask import Flask, request, render_template, session, jsonify
 import datetime, io, json, sympy
 from random import randint
@@ -91,8 +100,8 @@ def check():
     if "answer" not in request.args:
         return jsonify({"result":"error"})
     else:
-        if session["answer"] == "":
-            return jsonify({"result":"locked"}) # if we previously have a wrong result, then we lock out since the answer is revealed
+        #if session["answer"] == "":
+        #    return jsonify({"result":"locked"}) # if we previously have a wrong result, then we lock out since the answer is revealed
         try:
             a = float(session["answer"])
             b = float(request.args["answer"])
@@ -100,7 +109,7 @@ def check():
                 return jsonify({"result":"correct"})
             else:
                 a = session["answer"]
-                session["answer"] = ""
+                #session["answer"] = ""
                 return jsonify({"result":"wrong","actual":a})
         except:
             return jsonify({"result":"error"})

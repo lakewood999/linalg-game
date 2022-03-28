@@ -1,6 +1,21 @@
+/*
+Copyright 2022 Steven Su
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 /* Objects used to draw the game board
 */
 var popSound = new Audio("static/pop.mp3");
+
+function unitVectorize(dv) {
+    var magnitude = Math.sqrt(Math.pow(dv.x,2)+Math.pow(dv.y,2));
+    return {x: dv.x/magnitude, y: dv.y/magnitude};
+}
+
 function Ball() {
     this.radius = ballRadius;
     this.x = startX; this.y = startY;
@@ -33,7 +48,15 @@ function Ball() {
             this.yVelocity = -this.yVelocity;
         }
         if (this.x + dx > canvas.width-this.radius || this.x + dx < this.radius) {
-            this.xVelocity = -this.xVelocity;
+            var speedSquared = Math.pow(this.xVelocity,2)+Math.pow(this.yVelocity,2);
+            var newXVelocity = this.xVelocity * wallHorizontalMatrix[0].x + this.yVelocity * wallHorizontalMatrix[0].y;
+            var newYVelocity = this.xVelocity * wallHorizontalMatrix[1].x + this.yVelocity * wallHorizontalMatrix[1].y;
+            var k = Math.sqrt(speedSquared/(Math.pow(newXVelocity,2)+Math.pow(newYVelocity,2)));
+            console.log(k);
+            console.log(newXVelocity + " and " + newYVelocity + " and " + speedSquared);
+            this.xVelocity = k*newXVelocity;
+            this.yVelocity = k*newYVelocity;
+            console.log(Math.pow(this.xVelocity,2) + Math.pow(this.yVelocity,2))
         }
         // block collision detection
         // only check neighboring cells for efficiency; need to adjust until a proper fix can be made
