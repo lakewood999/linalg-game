@@ -71,7 +71,6 @@ function gen_board() {
             - (4/3)*(ballPowerupsOnBoard+balls.length)/effectiveLevel;
             var b2 = b1 + 0.035;
             var b3 = b2 + 0.075;
-            console.log(b1);
             if (percent < b1) {
                 newBlocks[i] = new Powerup();
                 newBlocks[i].color = 86;

@@ -19,7 +19,7 @@ function startProblem() {
         if (data["type"] === "determinant") {
             problemString = "Find the determinant of the following matrix: $$ " + data["text"] + "$$ to ";
         } else if (data["type"] === "matrix_equation") {
-            problemString = "Find the sum of all \\( x_i \\) in the solution to the following matrix equation: $$ " + data["text"] + "$$ to ";
+            problemString = "Find the sum of all \\( x_i \\) in the solution to the following representation of a system of equations: $$ " + data["text"] + "$$ to ";
         } else if (data["type"] === "inner_product") {
             problemString = "Find the inner product of the following vectors: $$ " + data["text"] + "$$ to ";
         } else if (data["type"] === "matrix_power") {
@@ -56,7 +56,6 @@ $("#problemSubmit").on("click", function(){
             powerups.apply(currentPowerup,true);
             numCorrect++;
         } else {
-            console.log($("#moreProblemChances").prop("checked"));
             problemChances--;
             if ($("#moreProblemChances").prop("checked") && problemChances > 0) {
                 $("#problemResult").toggleClass("text-danger",true);
@@ -69,7 +68,6 @@ $("#problemSubmit").on("click", function(){
             }
         }
         $("#problemResult").show();
-        console.log(newAttempt);
         if (!newAttempt) {
             $("#continueProblem").show();
         } else {

@@ -90,7 +90,23 @@ def problem():
             if num_pivots(A) == n:
                 break
         session["answer"] = ans
-        return jsonify({"text":matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist()),"type":"matrix_equation"})
+        t = ""
+        r = randint(0,1)
+        if r == 0:
+            t = matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist())
+        elif r == 1:
+            b = b.tolist()
+            t = "\\begin{cases}"
+            for row in range(len(A)):
+                temp = ""
+                for col in range(len(A[0])):
+                    temp += str(A[row][col]) + "x_{" + str(col+1) + "}"
+                    if col != len(A[0])-1:
+                        temp += "+"
+                temp += "=" + str(b[row][0])
+                t += temp + "\\\\"
+            t += "\\end{cases}"
+        return jsonify({"text":t,"type":"matrix_equation"})
     elif num == 2: # inner product
         matrices, ans = inner_product_problem(randint(2,4))
         session["answer"] = int(ans)

@@ -104,30 +104,30 @@
 		</div>
 		<div class="container mb-3">
 		    <h3>Instructions:</h3>
-		    <p>The objective of the game is to keep the blocks from reaching the bottom line. Each level, a new row of blocks will be generated at the top, with the current rows being pushed down one level. Each block has a certain number representing the number of times it needs to be hit by a ball. You have the opportunity to aim and set an initial trajectory each level where all of your balls (you have only one initially) will travel. Collect rings and solve linear algebra problems to unlock powerups (at the moment, the only one gives extra balls).</p>
+		    <p>The objective of the game is to keep the rows of blocks from reaching the bottom line as long as possible, measured in number of levels passed. Each level, a new row of blocks will be generated at the top, with the current rows being pushed down. Each block has a certain number representing the number of times it needs to be hit by a ball. You have the opportunity to aim and set an initial trajectory each level where all of your balls (you have only one initially) will travel. Collect rings and solve linear algebra problems to unlock vital powerups for destroying blocks as more appear and their numbers increase.</p>
 		    <ul>
-		        <li>On the game window, click anwhere and drag away downwards to start the aiming process. A ray will appear from the ball on the line showing the angle of launch and the thickness of the line represents the speed of the balls. Dragging further from the initial position increases thickness. To cancel the aiming process, drag upwards until the aiming ray disappears.</li>
+		        <li>On the game window, click anywhere (e.g. on the blue circle) and drag downwards to start the aiming process. A ray will appear from the ball on the line showing the angle of launch and the thickness of the line represents the speed of the balls. Dragging further from the initial position increases thickness. Drag around to change the angle. To cancel the aiming process, drag upwards until the aiming ray disappears.</li>
 				<li>Release your click to start the ball launching process.</li>
-				<li>Every 5 levels, you will get an extra ball automatically. However, in order to succeed at higher levels, you will need to collect powerups randomly generated each level and solve linear algebra problems correctly to have enough balls to deal with the increasing numbers on the blocks.</li>
-				<li><b>Powerups: </b>green are extra balls, blue increase the power of the ball, green are effective level reducations (reduces the number on blocks)</li>
+				<li>Every 5 levels, you will get an extra ball automatically. However, in order to succeed at higher levels, you will need to collect powerups randomly generated each level and solve linear algebra problems correctly to have enough balls and power to deal with the increasing numbers on the blocks.</li>
+				<li><b>Powerups: </b>green are extra balls, blue increase the power of the ball (amount reduced each time a ball hits a block), green are effective level reductions (reduces the number on blocks when they are generated)</li>
 		    </ul>
 		</div>
 		<div class="container mb-3">
 			<h3>Known Issues</h3>
-			<p>This is my first time making a game and I learned a lot of the animation/Javascript canvas stuff on the fly so there are some minor issues considering the relatively short time frame available in making this. I have spent numerous hours trying to address bugs in addition to the initial game creation, and this is the best I can do so far. However, the game is definitely in a playable state.</p>
+			<p>Making games is hard, especially when writing movement and physics from scratch. Considering the relatively short amount of time available developing this game and the fact that I learned a lot of the mechanics on the fly, there are a few minor errors. I have spent hours trying to address bugs in addition to the initial game creation and it isn't perfect, but the game is definitely in a playable state.</p>
 		    <ul>
-		        <li>Collision detection between the balls and blocks <em>can</em> be a little glitchy. This is a self-made system and there are some glitches that I cannot seem to figure out. (Game design is hard when you don't use an engine!)</li>
-				<li>There might be some adjustments that can be made for level scaling to balance the games difficulty but this is hard to determine. Level design is hard, especially when it is randomly generated.</li>
+		        <li>Collision detection between the balls and blocks <em>can</em> be a little glitchy. It works like 99% of the time though.</li>
+				<li>There might be some adjustments that can be made for level scaling to balance the game's difficulty but this is hard to perfect, especially since I myself am not that great at the game and because levels are randomly generated</li>
 		    </ul>
 		</div>
 		<div class="container mb-3">
-			<h3>Things Used</h3>
+			<h3>Tools and Packages Used</h3>
 			<p>These are the main packages and tools used to make this game.</p>
 			<ul>
-				<li><a href="https://www.python.org/">Python</a>, <a href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a>, and <a href="https://www.sympy.org/en/index.html">SymPy</a></li>
-				<li><a href="https://jquery.com/">jQuery</a> and plain Javascript</li>
-				<li><a href="https://getbootstrap.com/">Bootstrap</a></li>
-				<li>The code for this site is open-source and available at my <a href="https://git.stevensu.dev/lakewood999/linalg-game">GitLab</a>.</li>
+				<li><a href="https://www.python.org/">Python</a>, <a href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a>, and <a href="https://www.sympy.org/en/index.html">SymPy</a> on the backend</li>
+				<li><a href="https://jquery.com/">jQuery</a> and plain Javascript for the game code</li>
+				<li><a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://www.mathjax.org/">MathJax</a> for visual aesthetics</li>
+				<li>The code and resources for this site is open-source and available at my <a href="https://git.stevensu.dev/lakewood999/linalg-game">GitLab</a>.</li>
 			</ul>
 		</div>
 		<footer class="text-muted">
