@@ -8,7 +8,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 from flask import Flask, request, render_template, session, jsonify, send_from_directory
-import datetime, io, json, sympy
+import datetime, io, json, sympy, os
 from random import randint
 
 app = Flask(__name__)
