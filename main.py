@@ -16,6 +16,8 @@ app.secret_key = 'jfjsfS)DF0sF(H)#HODFJSLKDFJSL'
 
 #pipenv run gunicorn --bind 127.0.0.1:8000 main:app
 
+app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
+
 def matrix_to_latex(m):
     s = "\\begin{bmatrix}"
     for i in range(len(m)):
