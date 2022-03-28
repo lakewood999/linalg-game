@@ -63,6 +63,11 @@ def matrix_power_problem(n,k):
     a = gen_matrix(n)
     return a, sum(sympy.Matrix(a)**k)
 
+def num_pivots(m):
+    num_pivots = len(sympy.Matrix(m).rref()[1])
+    return num_pivots
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -78,9 +83,12 @@ def problem():
         session["answer"] = a
         return jsonify({"text":t,"type":"determinant"})
     elif num == 1: # 2 variable system
-        A = gen_matrix(n)
-        sol, ans = gen_sol(n)
-        b = sympy.Matrix(A) *sympy.Matrix(sol)
+        while True:
+            A = gen_matrix(n)
+            sol, ans = gen_sol(n)
+            b = sympy.Matrix(A) *sympy.Matrix(sol)
+            if num_pivots(A) == n:
+                break
         session["answer"] = ans
         return jsonify({"text":matrix_to_latex(A) + "\mathbf{x}=" + matrix_to_latex(b.tolist()),"type":"matrix_equation"})
     elif num == 2: # inner product
