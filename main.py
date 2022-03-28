@@ -7,7 +7,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
-from flask import Flask, request, render_template, session, jsonify, url_for
+from flask import Flask, request, render_template, session, jsonify, send_from_directory
 import datetime, io, json, sympy
 from random import randint
 
@@ -16,7 +16,9 @@ app.secret_key = 'jfjsfS)DF0sF(H)#HODFJSLKDFJSL'
 
 #pipenv run gunicorn --bind 127.0.0.1:8000 main:app
 
-app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico')
 
 def matrix_to_latex(m):
     s = "\\begin{bmatrix}"
