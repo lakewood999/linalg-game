@@ -79,6 +79,7 @@ def home():
 @app.route("/problem")
 def problem():
     n = randint(2,3)
+    session["checks"] = 3
     if "easy" in request.args and request.args["easy"] == "true":
         n = 2
     num = randint(0,3)
@@ -128,23 +129,30 @@ def check():
     if "answer" not in request.args:
         return jsonify({"result":"error"})
     else:
-        #if session["answer"] == "":
-        #    return jsonify({"result":"locked"}) # if we previously have a wrong result, then we lock out since the answer is revealed
+        if session["answer"] == "":
+            return jsonify({"result":"locked"}) # too many guesses; wrong answer
         try:
             a = float(session["answer"])
             b = float(request.args["answer"])
             if a == b:
                 return jsonify({"result":"correct"})
             else:
-                a = session["answer"]
-                #session["answer"] = ""
+                a = ""
+                session["checks"] -= 1
+                if session["checks"] == 0:
+                    a = session["answer"]
+                    session["answer"] = ""
                 return jsonify({"result":"wrong","actual":a})
         except:
             return jsonify({"result":"error"})
             
 @app.route("/cheat")
 def cheat():
-    return jsonify({"answer":session.get("answer")})
+    # very rudimentary cheat enable/disable
+    f=open(os.path.join(app.root_path, 'cheat.txt')))
+    if f.read().strip() == "true":
+        return jsonify({"answer":session.get("answer")})
+    return jsonify({"answer":"cheating is disabled"})
 
 if __name__ == "__main__":
     app.run()
