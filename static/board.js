@@ -63,7 +63,7 @@ function gen_board() {
     var newBlockTotal = (effectiveLevel+Math.floor(1+effectiveLevel/10)*3)*numFilled;
     var totalPower = balls.length + ballPower;
     var adjustmentAmount = 0;
-    var scaleLimit = Math.min(1.5,0.15*Math.max(0,(levelNum-40)/10));
+    var scaleLimit = Math.min(3,0.15*Math.max(0,(levelNum-40)/5));
     if (newBlockTotal/totalPower > 3+scaleLimit) {
         adjustmentAmount = Math.ceil(Math.max(0,newBlockTotal - (3+scaleLimit)*totalPower));
     }
