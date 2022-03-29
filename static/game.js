@@ -177,7 +177,6 @@ function draw(timestamp) {
             levelNum++;
             effectiveLevel++;
             if (levelNum % 5 === 0) {
-                //balls.push(new Ball()); // force new ball every 5 levels
                 if ($("#freeBallProblem").prop("checked")) {
                     powerups.add("newBall");
                 } else {

@@ -29,17 +29,26 @@ function gen_board() {
     // Get sub-array of first n elements after shuffled
     var r = Math.random();//1+Math.floor(Math.random()*(numBlocksWidth-1)
     var numFilled = 1;
-    if (r < 0.5) {
+    var nf1 = 0.20;
+    var nf2 = nf1 + 0.25;
+    var nf3 = nf2 + 0.25;
+    var nf4 = nf3 + 0.15;
+    var nf5 = nf4 + 0.1;
+    var nf6 = nf5 + 0.03;
+    var nf7 = nf6 + 0.02;
+    if (r < nf1) {
+        numFilled = 1;
+    } else if (r < nf2) {
         numFilled = 2;
-    } else if (r < 0.65) {
+    } else if (r < nf3) {
         numFilled = 3;
-    } else if (r < 0.75) {
+    } else if (r < nf4) {
         numFilled = 4;
-    } else if (r < 0.775) {
+    } else if (r < nf5) {
         numFilled = 5;
-    } else if (r < 0.785) {
+    } else if (r < nf6) {
         numFilled = 6;
-    } else if (r < 0.795) {
+    } else if (r < nf7) {
         numFilled = 7;
     } else if (r <= 1) {
         numFilled = 1;
@@ -63,9 +72,9 @@ function gen_board() {
     var newBlockTotal = (effectiveLevel+Math.floor(1+effectiveLevel/10)*3)*numFilled;
     var totalPower = balls.length + ballPower;
     var adjustmentAmount = 0;
-    var scaleLimit = Math.min(4,0.15*Math.max(0,(levelNum-30)/5));
-    if (newBlockTotal/totalPower > 3.5+scaleLimit) {
-        adjustmentAmount = Math.ceil(Math.max(0,newBlockTotal - (3.5+scaleLimit)*totalPower));
+    var scaleLimit = Math.min(2.5,0.1*Math.max(0,(levelNum-30)/5));
+    if (newBlockTotal/totalPower > 3.25+scaleLimit) {
+        adjustmentAmount = Math.ceil(Math.max(0,newBlockTotal - (3.25+scaleLimit)*totalPower));
     }
     for (i = 0; i < numBlocksWidth; i++) {
         if (selected.includes(i)) {
@@ -116,8 +125,8 @@ function gen_board() {
                 }
                 
                 var blockNumber = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus)
-                blockNumber += Math.floor(0.7*(Math.max(0,totalPower-levelNum))); // adjust by a deficit of power so we don't get too OP
-                var totalPowerAdjustment = Math.floor(Math.random()*Math.floor(1/numFilled*adjustmentAmount));
+                blockNumber += Math.floor(0.85*(Math.max(0,totalPower-levelNum))); // adjust by a deficit of power so we don't get too OP
+                var totalPowerAdjustment = Math.floor(Math.random()*Math.floor(1.5/numFilled*adjustmentAmount));
                 blockNumber *= multiplier;
                 blockNumber -= Math.max(0,totalPowerAdjustment)*multiplier;
                 newBlocks[i].number = Math.max(1,blockNumber);
