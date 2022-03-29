@@ -149,6 +149,9 @@ def check():
 @app.route("/cheat")
 def cheat():
     # very rudimentary cheat enable/disable
+    if "cheat.txt" not in os.listdir(app.root_path):
+        return jsonify({"answer":"cheating is disabled"})
+
     f = open(os.path.join(app.root_path, 'cheat.txt'),"r")
 
     if f.read().strip() == "true":
