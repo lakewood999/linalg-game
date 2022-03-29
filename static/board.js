@@ -118,7 +118,6 @@ function gen_board() {
                 var blockNumber = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus)
                 blockNumber += Math.floor(0.7*(Math.max(0,totalPower-levelNum))); // adjust by a deficit of power so we don't get too OP
                 var totalPowerAdjustment = Math.floor(Math.random()*Math.floor(1/numFilled*adjustmentAmount));
-                console.log(totalPowerAdjustment)
                 blockNumber *= multiplier;
                 blockNumber -= Math.max(0,totalPowerAdjustment)*multiplier;
                 newBlocks[i].number = Math.max(1,blockNumber);
