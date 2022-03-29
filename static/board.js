@@ -31,17 +31,17 @@ function gen_board() {
     var numFilled = 1;
     if (r < 0.5) {
         numFilled = 2;
-    } else if (r < 0.6) {
+    } else if (r < 0.65) {
         numFilled = 3;
-    } else if (r < 0.7) {
+    } else if (r < 0.75) {
         numFilled = 4;
     } else if (r < 0.775) {
         numFilled = 5;
-    } else if (r < 0.825) {
+    } else if (r < 0.785) {
         numFilled = 6;
-    } else if (r < 0.85) {
+    } else if (r < 0.795) {
         numFilled = 7;
-    } else if (r < 0.9) {
+    } else if (r <= 1) {
         numFilled = 1;
     }
     let selected = shuffled.slice(0, numFilled);
@@ -60,7 +60,13 @@ function gen_board() {
     } else if (effectiveLevel < 20) {
         percentBonus = 0.1
     }
-    
+    var newBlockTotal = (effectiveLevel+Math.floor(1+effectiveLevel/10)*3)*numFilled;
+    var totalPower = balls.length + ballPower;
+    var adjustmentAmount = 0;
+    var scaleLimit = Math.min(1.5,0.15*Math.max(0,(levelNum-40)/10));
+    if (newBlockTotal/totalPower > 3+scaleLimit) {
+        adjustmentAmount = Math.ceil(Math.max(0,newBlockTotal - (3+scaleLimit)*totalPower));
+    }
     for (i = 0; i < numBlocksWidth; i++) {
         if (selected.includes(i)) {
             // ball chance depends on base, adjustment for levels since, and current level subtracting number available
@@ -108,7 +114,14 @@ function gen_board() {
                 if (Math.random() < 0.05) {
                     multiplier = 2;
                 }
-                newBlocks[i].number = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus) * multiplier;
+                
+                var blockNumber = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus)
+                blockNumber += Math.floor(0.7*(Math.max(0,totalPower-levelNum))); // adjust by a deficit of power so we don't get too OP
+                var totalPowerAdjustment = Math.floor(Math.random()*Math.floor(1/numFilled*adjustmentAmount));
+                console.log(totalPowerAdjustment)
+                blockNumber *= multiplier;
+                blockNumber -= Math.max(0,totalPowerAdjustment)*multiplier;
+                newBlocks[i].number = Math.max(1,blockNumber);
                 newBlocks[i].len = blockSize;
             }
         } else {

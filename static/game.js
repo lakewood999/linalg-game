@@ -122,7 +122,6 @@ function draw(timestamp) {
             var xLength = canvas.width/2;
             mouseAngle = Math.max(17.5*Math.PI/180,mouseAngle);
             var lineY = startY - Math.sin(mouseAngle)*xLength;
-            console.log(mouseAngle*180/Math.PI);
             if (mouseDx < 0) {
                 var lineX = startX + xLength*Math.cos(mouseAngle);
             } else {
