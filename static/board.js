@@ -29,9 +29,9 @@ function gen_board() {
     // Get sub-array of first n elements after shuffled
     var r = Math.random();//1+Math.floor(Math.random()*(numBlocksWidth-1)
     var numFilled = 1;
-    if (r < 0.4) {
+    if (r < 0.5) {
         numFilled = 2;
-    } else if (r < 0.55) {
+    } else if (r < 0.6) {
         numFilled = 3;
     } else if (r < 0.7) {
         numFilled = 4;
@@ -66,11 +66,11 @@ function gen_board() {
             // ball chance depends on base, adjustment for levels since, and current level subtracting number available
             var percent = Math.random();
             // list of chances for the different powerups
-            var b1 = Math.min(0.65,0.35 + percentBonus + Math.max(0, Math.log(0.4*roundsSincePowerup+0.7)) 
+            var b1 = Math.min(0.675,0.35 + percentBonus + Math.max(0, Math.log(0.4*roundsSincePowerup+0.7)) 
             + Math.max(0,-0.5*(balls.length/effectiveLevel-0.5)))
             - (4/3)*(ballPowerupsOnBoard+balls.length)/effectiveLevel;
-            var b2 = b1 + 0.015;
-            var b3 = b2 + 0.045;
+            var b2 = b1 + 0.01;
+            var b3 = b2 + 0.05;
             if (percent < b1) {
                 newBlocks[i] = new Powerup();
                 newBlocks[i].color = 86;
@@ -105,7 +105,7 @@ function gen_board() {
                     lvlAdjust = -2;
                 }
                 var multiplier = 1;
-                if (Math.random() < 0.075) {
+                if (Math.random() < 0.05) {
                     multiplier = 2;
                 }
                 newBlocks[i].number = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus) * multiplier;
