@@ -149,7 +149,8 @@ def check():
 @app.route("/cheat")
 def cheat():
     # very rudimentary cheat enable/disable
-    f=open(os.path.join(app.root_path, 'cheat.txt')))
+    f = open(os.path.join(app.root_path, 'cheat.txt'),"r")
+
     if f.read().strip() == "true":
         return jsonify({"answer":session.get("answer")})
     return jsonify({"answer":"cheating is disabled"})
