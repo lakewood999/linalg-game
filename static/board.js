@@ -29,9 +29,9 @@ function gen_board() {
     // Get sub-array of first n elements after shuffled
     var r = Math.random();//1+Math.floor(Math.random()*(numBlocksWidth-1)
     var numFilled = 1;
-    if (r < 0.475) {
+    if (r < 0.4) {
         numFilled = 2;
-    } else if (r < 0.60) {
+    } else if (r < 0.55) {
         numFilled = 3;
     } else if (r < 0.7) {
         numFilled = 4;
@@ -102,9 +102,13 @@ function gen_board() {
                 } else if (lvlChance < 0.85) {
                     lvlAdjust = -1;
                 } else if (lvlChance < 0.95) {
-                    lvlChance = -2;
+                    lvlAdjust = -2;
                 }
-                newBlocks[i].number = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus);
+                var multiplier = 1;
+                if (Math.random() < 0.075) {
+                    multiplier = 2;
+                }
+                newBlocks[i].number = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus) * multiplier;
                 newBlocks[i].len = blockSize;
             }
         } else {
