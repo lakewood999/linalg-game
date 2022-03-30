@@ -36,6 +36,15 @@ function gen_board() {
     var nf5 = nf4 + 0.1;
     var nf6 = nf5 + 0.03;
     var nf7 = nf6 + 0.02;
+    if (levelNum > 30) {
+        nf1 = 0.10;
+        nf2 = nf1 + 0.20;
+        nf3 = nf2 + 0.30;
+        nf4 = nf3 + 0.20;
+        nf5 = nf4 + 0.10;
+        nf6 = nf5 + 0.05;
+        nf7 = nf6 + 0.05;
+    }
     if (r < nf1) {
         numFilled = 1;
     } else if (r < nf2) {
@@ -125,8 +134,8 @@ function gen_board() {
                 }
                 
                 var blockNumber = Math.max(1,effectiveLevel+Math.floor(1+effectiveLevel/10)*lvlAdjust+levelBonus)
-                blockNumber += Math.floor(0.85*(Math.max(0,totalPower-levelNum))); // adjust by a deficit of power so we don't get too OP
-                var totalPowerAdjustment = Math.floor(Math.random()*Math.floor(1.5/numFilled*adjustmentAmount));
+                blockNumber += Math.floor((Math.random()*(1.25-0.85)+0.85)*(Math.max(0,totalPower-levelNum))); // adjust by a deficit of power so we don't get too OP
+                var totalPowerAdjustment = Math.floor(Math.random()*Math.floor(1.2/numFilled*adjustmentAmount));
                 blockNumber *= multiplier;
                 blockNumber -= Math.max(0,totalPowerAdjustment)*multiplier;
                 newBlocks[i].number = Math.max(1,blockNumber);
