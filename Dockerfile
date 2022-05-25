@@ -7,9 +7,6 @@ RUN apt install -y software-properties-common python3-pip
 RUN python3 -m pip install pipenv
 ENV PIPENV_VENV_IN_PROJECT=1
 
-RUN mkdir ./linalg-game
-WORKDIR ./linalg-game
-
 # copy and install dependencies
 RUN mkdir .venv/
 COPY Pipfile .
@@ -17,8 +14,8 @@ COPY Pipfile.lock .
 RUN pipenv sync
 
 # Copy application
-COPY static/ .
-COPY templates/ .
+COPY static/ ./static
+COPY templates/ ./templates
 COPY LICENSE .
 COPY main.py .
 

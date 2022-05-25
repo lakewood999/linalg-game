@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:80"
-    volumes:
-      - cheat.txt:/linalg-game/cheat.txt
-volumes:
-  cheat.txt: {}
+    environment:
+      - GAME_ENABLE_CHEAT=0
+
